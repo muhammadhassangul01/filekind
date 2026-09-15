@@ -15,10 +15,37 @@ export function formatDimensions(width: number, height: number): string {
 }
 
 export function validateInput(file: File, types: string[]): string | null {
-  if (!types.includes(file.type)) return "Choose a JPEG or PNG image file.";
+  if (!types.includes(file.type)) return "Choose a supported JPEG, PNG, or static WebP image file.";
   if (file.size > MAX_INPUT_BYTES) return "This file is larger than the 25 MB supported limit.";
   if (file.size === 0) return "That file is empty. Choose a different image.";
   return null;
+}
+
+export type ImageFormat = "jpg" | "png" | "webp";
+
+export const imageMimeTypes: Record<ImageFormat, string> = {
+  jpg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+};
+
+export function detectImageFormat(file: File): ImageFormat | null {
+  if (file.type === "image/jpeg") return "jpg";
+  if (file.type === "image/png") return "png";
+  if (file.type === "image/webp") return "webp";
+  return null;
+}
+
+export function formatLabel(format: ImageFormat): string {
+  return format === "jpg" ? "JPG" : format.toUpperCase();
+}
+
+export async function isAnimatedWebP(file: File): Promise<boolean> {
+  if (file.type !== "image/webp") return false;
+  const bytes = new Uint8Array(await file.slice(0, Math.min(file.size, 2_000_000)).arrayBuffer());
+  let text = "";
+  for (let index = 0; index + 3 < bytes.length; index += 1) text += String.fromCharCode(bytes[index], bytes[index + 1], bytes[index + 2], bytes[index + 3]);
+  return text.includes("ANIM") || text.includes("ANMF");
 }
 
 export async function decodeImage(file: File): Promise<ImageInfo> {
@@ -141,6 +168,31 @@ export async function pngToJpeg(file: File, signal?: AbortSignal): Promise<{ blo
       closeSource(source);
     }
   } finally {
+    URL.revokeObjectURL(info.url);
+  }
+}
+
+export async function convertImage(file: File, outputFormat: ImageFormat, signal?: AbortSignal): Promise<{ blob: Blob; width: number; height: number }> {
+  const info = await decodeImage(file);
+  const source = await orientedSource(file, info.url);
+  try {
+    if (signal?.aborted) throw new DOMException("Conversion cancelled", "AbortError");
+    const dimensions = sourceDimensions(source);
+    const canvas = document.createElement("canvas");
+    canvas.width = dimensions.width;
+    canvas.height = dimensions.height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Your browser could not prepare this image.");
+    if (outputFormat === "jpg") {
+      context.fillStyle = "#fff";
+      context.fillRect(0, 0, dimensions.width, dimensions.height);
+    }
+    context.drawImage(source, 0, 0);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, imageMimeTypes[outputFormat], outputFormat === "jpg" ? 0.92 : undefined));
+    if (!blob || blob.type !== imageMimeTypes[outputFormat]) throw new Error(`Your browser could not create a ${formatLabel(outputFormat)} file.`);
+    return { blob, width: dimensions.width, height: dimensions.height };
+  } finally {
+    closeSource(source);
     URL.revokeObjectURL(info.url);
   }
 }

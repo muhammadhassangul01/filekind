@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import ToolLayout, { FileDrop, PageFooter } from "./tool-layout";
 import { compressToTarget, formatBytes, formatDimensions, releaseImage, validateInput, decodeImage, type ImageInfo } from "./image-utils";
 
@@ -10,7 +11,12 @@ export default function ImageCompressor() {
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<ImageInfo | null>(null);
   const [result, setResult] = useState<Result | null>(null);
-  const [target, setTarget] = useState("500");
+  const [target, setTarget] = useState(() => {
+    if (typeof window === "undefined") return "500";
+    const value = new URLSearchParams(window.location.search).get("targetKB");
+    const numericValue = Number(value);
+    return value && /^\d+(?:\.\d+)?$/.test(value) && numericValue >= 1 && numericValue <= 50_000 ? value : "500";
+  });
   const [unit, setUnit] = useState("KB");
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
@@ -99,7 +105,7 @@ export default function ImageCompressor() {
   const targetBytes = Number(target) * (unit === "MB" ? 1_000_000 : 1_000);
 
   return <ToolLayout active="compressor">
-    <section className="intro"><h1>Compress an image</h1><p className="intro-copy">Set a maximum size and create a lighter JPEG privately in your browser.</p></section>
+    <section className="intro"><h1>Compress Image to KB or MB</h1><p className="intro-copy">Set a maximum size and create a lighter JPEG privately in your browser.</p></section>
     <div className="tool-grid">
       <section className="tool-panel" aria-labelledby={result ? "compress-result-heading" : "compress-heading"}>
         {result ? <div className="success-state">
@@ -113,7 +119,7 @@ export default function ImageCompressor() {
         <div className="panel-heading"><div><h2 id="compress-heading">Choose an image</h2><p className="small-note">JPEG or PNG, up to 25 MB</p></div></div>
         {source && file ? <div className="selected-file"><img src={source.url} alt={`Preview of ${file.name}`} /><div className="selected-file-details"><strong title={file.name} aria-label={`Selected file: ${file.name}`}>{file.name}</strong><span>{formatBytes(file.size)} · {formatDimensions(source.width, source.height)}</span></div><label className="change-image" htmlFor="compress-file">Change image<input className="file-input" id="compress-file" type="file" accept="image/jpeg,image/png" onChange={(event) => { const nextFile = event.target.files?.[0]; if (nextFile) void chooseFile(nextFile); event.target.value = ""; }} disabled={busy} /></label></div> : <FileDrop inputId="compress-file" accept="image/jpeg,image/png" onFile={chooseFile} busy={busy} />}
         <div className="controls">
-          <div className="target-field"><label className="field-label" htmlFor="target-size">Maximum file size</label><div className="size-row"><input className="text-input" id="target-size" type="number" min="1" value={target} onChange={(event) => updateTarget(event.target.value)} /><select className="select-input" value={unit} onChange={(event) => updateUnit(event.target.value)} aria-label="Target size unit"><option>KB</option><option>MB</option></select></div><div className="presets" aria-label="Target size presets"><button className={`preset ${target === "100" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("100"); updateUnit("KB"); }}>100 KB</button><button className={`preset ${target === "200" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("200"); updateUnit("KB"); }}>200 KB</button><button className={`preset ${target === "500" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("500"); updateUnit("KB"); }}>500 KB</button></div></div>
+          <div className="target-field"><label className="field-label" htmlFor="target-size">Maximum file size</label><div className="size-row"><input className="text-input" id="target-size" type="number" min="1" value={target} onChange={(event) => updateTarget(event.target.value)} suppressHydrationWarning /><select className="select-input" value={unit} onChange={(event) => updateUnit(event.target.value)} aria-label="Target size unit"><option>KB</option><option>MB</option></select></div><div className="presets" aria-label="Target size presets"><button className={`preset ${target === "100" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("100"); updateUnit("KB"); }}>100 KB</button><button className={`preset ${target === "200" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("200"); updateUnit("KB"); }}>200 KB</button><button className={`preset ${target === "500" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("500"); updateUnit("KB"); }}>500 KB</button></div></div>
           <div className="action-field"><button ref={actionRef} className="primary-button" type="button" onClick={compress} suppressHydrationWarning disabled={busy || !file}>{busy ? "Compressing..." : "Generate"}</button>{busy && <button className="secondary-button" type="button" onClick={cancel} style={{ marginTop: 8, width: "100%" }}>Cancel</button>}</div>
         </div>
         <p className="control-note">1 KB = 1,000 bytes. Transparency becomes white and dimensions may shrink.</p>
@@ -123,6 +129,6 @@ export default function ImageCompressor() {
       </section>
     </div>
     <div className="support-strip"><span><strong>Private</strong> Files stay in your browser.</span><span><strong>Limits</strong> Up to 25 MB, 16,000 px per side, and 48 MP.</span></div>
-    <PageFooter />
+    <section className="info-panel"><h2>Compress an image below a custom limit</h2><p>Choose 200 KB, 500 KB, or enter another limit in KB or MB. <Link href="/?targetKB=200">Set a 200 KB target</Link> to start with a smaller file.</p></section><PageFooter />
   </ToolLayout>;
 }

@@ -2,11 +2,13 @@
 
 Minimal browser-only image tools built with Next.js, TypeScript, and Tailwind CSS.
 
-## What works
+## Public tools
 
-- `/` compresses JPEG and PNG images to a custom maximum size or the 100 KB, 200 KB, and 500 KB presets.
-- `/png-to-jpg` converts PNG images to JPG with transparent pixels composited onto white.
-- Images are decoded, processed, previewed, and downloaded locally. No image data, filenames, or upload requests leave the browser.
+- `/` compresses JPEG and PNG images to a custom maximum size. `/?targetKB=200` is a validated preset URL.
+- `/convert-image` converts JPEG, PNG, and static WebP through one shared interface. Legacy converter URLs redirect to canonical presets.
+- `/images-to-pdf` arranges multiple images into an A4 PDF.
+- `/pdf-to-images` renders complete PDF pages as numbered JPG or PNG files and downloads them as a ZIP.
+- Image and PDF contents stay on the device. If `NEXT_PUBLIC_ANALYTICS_ENDPOINT` is configured, only normalized public page paths are sent for aggregate usage analytics; page views are not unique people.
 - Inputs are limited to 25 MB, 16,000 pixels per side, and 48 megapixels. The pixel ceiling keeps unusually large images bounded while supporting high-resolution photos such as 7,952 x 5,304 px.
 
 ## Run locally
@@ -34,12 +36,13 @@ This project uses Next.js static export (`output: "export"`). In Cloudflare Page
 - Build output directory: `out`
 - Node.js version: `20` or newer
 
-No environment variables or server-side image service are required.
+Set `NEXT_PUBLIC_SITE_URL` to the production origin before building so canonical URLs and the sitemap use the correct host. The default is `https://filekind.pages.dev`; update it when moving to a custom domain. Keep `public/_redirects` in the deployment so old converter URLs remain permanent redirects.
+
+The current deployment is static export. It cannot safely host the requested authenticated `/admin` dashboard, D1 writes, password hashing, or session cookies. Do not publish an unprotected dashboard. To add analytics, deploy a separate Cloudflare Worker with D1 and set `NEXT_PUBLIC_ANALYTICS_ENDPOINT` to its public ingestion URL. The Worker must own `/admin/login`, `/admin`, and protected analytics reads, use Cloudflare secrets for the password hash and session signing secret, and return `Cache-Control: private, no-store`. Configure a strong production password hash with `wrangler secret put`, create the D1 binding, apply a migration for daily path/country aggregates, and deploy the Worker before exposing those routes. Submit the generated `/sitemap.xml` to Search Console after the final origin is live.
 
 ## Browser limitations
 
 Very large or highly detailed images may not be able to reach an unusually small target without an impractical loss of dimensions. JPEG encoding also varies slightly by browser, so the compressor verifies the final Blob and only reports success when it is at or below the requested byte limit.
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 

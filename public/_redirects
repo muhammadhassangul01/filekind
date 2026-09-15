@@ -1,0 +1,2 @@
+/jpg-to-png /convert-image?from=jpg&to=png 301
+/png-to-jpg /convert-image?from=png&to=jpg 301
