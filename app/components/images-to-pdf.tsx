@@ -5,12 +5,12 @@ import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalList
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useRef, useState } from "react";
 import ToolLayout from "./tool-layout";
-import { decodeImage, formatBytes, formatDimensions, isAnimatedWebP, releaseImage, validateInput, type ImageInfo } from "./image-utils";
+import { decodeImage, formatBytes, isAnimatedWebP, releaseImage, validateInput, type ImageInfo } from "./image-utils";
 
 type SelectedImage = { id: string; file: File; info: ImageInfo };
 type PageSize = "fit" | "a4" | "letter";
 type Settings = { pageSize: PageSize; marginMode: "none" | "custom"; marginMm: number; orientation: "auto" | "portrait" | "landscape" };
-type Result = { blob: Blob; url: string; pages: number };
+type Result = { blob: Blob; url: string; pages: number; previewUrl: string; previewRatio: number };
 const accepted = ["image/jpeg", "image/png", "image/webp"];
 const defaultSettings: Settings = { pageSize: "fit", marginMode: "none", marginMm: 0, orientation: "auto" };
 
@@ -49,8 +49,8 @@ function SortableImageRow({ item, index, onRemove, disabled, activeId, overId }:
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: item.id, disabled });
   return <div ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }} className={`image-list-item${isDragging ? " is-dragging" : ""}${overId === item.id && activeId !== item.id ? " is-drop-target" : ""}`}>
     <button className="drag-handle" type="button" aria-label={`Reorder ${item.file.name}, currently position ${index + 1}`} {...attributes} {...listeners} disabled={disabled}><span aria-hidden="true" className="drag-dots">{Array.from({ length: 6 }, (_, dot) => <i key={dot} />)}</span></button>
-    <span className="thumbnail-number" aria-hidden="true">{index + 1}</span><img src={item.info.url} alt="" />
-    <div className="selected-file-details"><strong title={item.file.name}>{item.file.name}</strong><span>{formatBytes(item.file.size)} <span aria-hidden="true">·</span> {formatDimensions(item.info.width, item.info.height)}</span></div>
+    <img src={item.info.url} alt="" />
+    <div className="selected-file-details"><strong title={item.file.name}>{item.file.name}</strong></div>
     <button className="remove-button" type="button" onClick={onRemove} disabled={disabled} aria-label={`Remove ${item.file.name}`}>Remove</button>
   </div>;
 }
@@ -62,7 +62,7 @@ export default function ImagesToPdf() {
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }), useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }));
   useEffect(() => { itemsRef.current = items; }, [items]);
   useEffect(() => { let mounted = true; return () => { mounted = false; setTimeout(() => { if (!mounted) itemsRef.current.forEach((item) => releaseImage(item.info)); }, 0); }; }, []);
-  useEffect(() => { resultRef.current = result; }, [result]); useEffect(() => () => { if (resultRef.current) URL.revokeObjectURL(resultRef.current.url); }, []);
+  useEffect(() => { resultRef.current = result; document.documentElement.style.setProperty("--pdf-preview-url", result ? `url("${result.previewUrl}")` : "none"); document.documentElement.style.setProperty("--pdf-preview-ratio", result ? String(result.previewRatio) : "auto"); return () => { document.documentElement.style.removeProperty("--pdf-preview-url"); document.documentElement.style.removeProperty("--pdf-preview-ratio"); }; }, [result]); useEffect(() => () => { if (resultRef.current) URL.revokeObjectURL(resultRef.current.url); }, []);
   useEffect(() => { if (result && headingRef.current) headingRef.current.focus({ preventScroll: true }); }, [result]);
 
   function clearResult() { if (resultRef.current) URL.revokeObjectURL(resultRef.current.url); resultRef.current = null; setResult(null); }
@@ -91,7 +91,7 @@ export default function ImagesToPdf() {
         const contentWidth = pageWidth - margin * 2; const contentHeight = pageHeight - margin * 2; const scale = Math.min(contentWidth / imageWidth, contentHeight / imageHeight); const drawWidth = imageWidth * scale; const drawHeight = imageHeight * scale;
         pdf.addImage(image.dataUrl, image.format, margin + (contentWidth - drawWidth) / 2, margin + (contentHeight - drawHeight) / 2, drawWidth, drawHeight, undefined, image.format === "JPEG" ? "NONE" : undefined);
       }
-      if (!pdf) throw new Error("Choose at least one image."); if (controller.signal.aborted) throw new DOMException("PDF creation cancelled", "AbortError"); const blob = pdf.output("blob"); setResult({ blob, url: URL.createObjectURL(blob), pages: snapshot.length }); setStatus("");
+      if (!pdf) throw new Error("Choose at least one image."); if (controller.signal.aborted) throw new DOMException("PDF creation cancelled", "AbortError"); const blob = pdf.output("blob"); const firstImage = snapshot[0]; const firstWidth = firstImage.info.width * 72 / 96; const firstHeight = firstImage.info.height * 72 / 96; const previewRatio = snapshotSettings.pageSize === "fit" ? (firstWidth + margin * 2) / (firstHeight + margin * 2) : (snapshotSettings.orientation === "landscape" || (snapshotSettings.orientation === "auto" && firstWidth > firstHeight) ? (snapshotSettings.pageSize === "a4" ? 841.89 / 595.28 : 792 / 612) : (snapshotSettings.pageSize === "a4" ? 595.28 / 841.89 : 612 / 792)); setResult({ blob, url: URL.createObjectURL(blob), pages: snapshot.length, previewUrl: firstImage.info.url, previewRatio }); setStatus("");
     } catch (generationError) { if (generationError instanceof DOMException && generationError.name === "AbortError") setStatus("PDF creation cancelled."); else setError(generationError instanceof Error ? generationError.message : "The PDF could not be created."); } finally { setBusy(false); abortRef.current = null; }
   }
 

@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "worker:dev": "pnpm --dir worker dev",
+    "worker:deploy": "pnpm --dir worker run deploy",
+    "worker:hash-password": "pnpm --dir worker hash-password",
+    "worker:db:migrate:local": "pnpm --dir worker db:migrate:local",
+    "worker:db:migrate:remote": "pnpm --dir worker db:migrate:remote"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

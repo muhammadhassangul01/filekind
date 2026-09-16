@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function ToolLayout({
   children,
   active,
-}: { children: React.ReactNode; active: "compressor" | "converter" | "images-pdf" | "pdf-images" }) {
+}: { children: React.ReactNode; active: "home" | "compressor" | "converter" | "images-pdf" | "pdf-images" }) {
   const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     if (!menuOpen) return;
@@ -29,7 +29,7 @@ export default function ToolLayout({
         </button>
         {menuOpen && <button className="menu-backdrop" type="button" aria-label="Close navigation menu" onClick={() => setMenuOpen(false)} />}
         <nav className={`nav-links ${menuOpen ? "open" : ""}`} id="image-tools-nav" aria-label="Image tools">
-          <Link onClick={() => setMenuOpen(false)} href="/" aria-current={active === "compressor" ? "page" : undefined}>Compress image</Link>
+          <Link onClick={() => setMenuOpen(false)} href="/compress-image" aria-current={active === "compressor" ? "page" : undefined}>Compress image</Link>
           <Link onClick={() => setMenuOpen(false)} href="/convert-image" aria-current={active === "converter" ? "page" : undefined}>Convert image</Link>
           <Link onClick={() => setMenuOpen(false)} href="/images-to-pdf" aria-current={active === "images-pdf" ? "page" : undefined}>Images to PDF</Link>
           <Link onClick={() => setMenuOpen(false)} href="/pdf-to-images" aria-current={active === "pdf-images" ? "page" : undefined}>PDF to images</Link>
@@ -64,5 +64,5 @@ export function FileDrop({ accept, onFile, busy, inputId }: { accept: string; on
 }
 
 export function PageFooter() {
-  return <footer className="footer">Files stay in your browser. Minimal page-view data may be sent for anonymous usage analytics.</footer>;
+  return <footer className="footer">Files stay in your browser. Filekind collects limited anonymous page-view analytics to understand which tools are useful.</footer>;
 }

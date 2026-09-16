@@ -1,0 +1,17 @@
+name = "filekind-analytics"
+main = "src/index.ts"
+compatibility_date = "2026-09-15"
+workers_dev = true
+
+[vars]
+ALLOWED_ORIGINS = "https://filekind.pages.dev,http://localhost:3000"
+SESSION_TTL_SECONDS = "28800"
+
+[triggers]
+crons = ["0 3 * * *"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "filekind-analytics"
+database_id = "9f9b21d9-2c61-4a53-b44c-0137af954d90"
+migrations_dir = "migrations"

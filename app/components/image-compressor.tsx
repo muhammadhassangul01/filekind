@@ -129,6 +129,6 @@ export default function ImageCompressor() {
       </section>
     </div>
     <div className="support-strip"><span><strong>Private</strong> Files stay in your browser.</span><span><strong>Limits</strong> Up to 25 MB, 16,000 px per side, and 48 MP.</span></div>
-    <section className="info-panel"><h2>Compress an image below a custom limit</h2><p>Choose 200 KB, 500 KB, or enter another limit in KB or MB. <Link href="/?targetKB=200">Set a 200 KB target</Link> to start with a smaller file.</p></section><PageFooter />
+    <section className="info-panel"><h2>Compress an image below a custom limit</h2><p>Choose 200 KB, 500 KB, or enter another limit in KB or MB. <Link href="/compress-image?targetKB=200">Set a 200 KB target</Link> to start with a smaller file.</p></section><PageFooter />
   </ToolLayout>;
 }

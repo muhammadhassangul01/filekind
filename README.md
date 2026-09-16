@@ -4,11 +4,12 @@ Minimal browser-only image tools built with Next.js, TypeScript, and Tailwind CS
 
 ## Public tools
 
-- `/` compresses JPEG and PNG images to a custom maximum size. `/?targetKB=200` is a validated preset URL.
+- `/` is the minimal tool chooser homepage. Legacy `/?targetKB=200` links forward to `/compress-image?targetKB=200`.
+- `/compress-image` compresses JPEG and PNG images to a custom maximum size.
 - `/convert-image` converts JPEG, PNG, and static WebP through one shared interface. Legacy converter URLs redirect to canonical presets.
-- `/images-to-pdf` arranges multiple images into an A4 PDF.
+- `/images-to-pdf` arranges multiple images into a configurable PDF.
 - `/pdf-to-images` renders complete PDF pages as numbered JPG or PNG files and downloads them as a ZIP.
-- Image and PDF contents stay on the device. If `NEXT_PUBLIC_ANALYTICS_ENDPOINT` is configured, only normalized public page paths are sent for aggregate usage analytics; page views are not unique people.
+- Image and PDF contents stay on the device. If `NEXT_PUBLIC_ANALYTICS_ENDPOINT` is configured in a production Pages build, only normalized public page paths are sent for limited aggregate usage analytics; counts are approximate page views, not unique people.
 - Inputs are limited to 25 MB, 16,000 pixels per side, and 48 megapixels. The pixel ceiling keeps unusually large images bounded while supporting high-resolution photos such as 7,952 x 5,304 px.
 
 ## Run locally
@@ -38,7 +39,19 @@ This project uses Next.js static export (`output: "export"`). In Cloudflare Page
 
 Set `NEXT_PUBLIC_SITE_URL` to the production origin before building so canonical URLs and the sitemap use the correct host. The default is `https://filekind.pages.dev`; update it when moving to a custom domain. Keep `public/_redirects` in the deployment so old converter URLs remain permanent redirects.
 
-The current deployment is static export. It cannot safely host the requested authenticated `/admin` dashboard, D1 writes, password hashing, or session cookies. Do not publish an unprotected dashboard. To add analytics, deploy a separate Cloudflare Worker with D1 and set `NEXT_PUBLIC_ANALYTICS_ENDPOINT` to its public ingestion URL. The Worker must own `/admin/login`, `/admin`, and protected analytics reads, use Cloudflare secrets for the password hash and session signing secret, and return `Cache-Control: private, no-store`. Configure a strong production password hash with `wrangler secret put`, create the D1 binding, apply a migration for daily path/country aggregates, and deploy the Worker before exposing those routes. Submit the generated `/sitemap.xml` to Search Console after the final origin is live.
+## Analytics Worker and admin
+
+The static Pages app does not serve `/admin`. The separate Worker in `worker/` owns the admin origin, analytics ingestion, D1 storage, and protected dashboard. No Worker has been deployed from this environment, so there is currently no live admin URL.
+
+1. Create a D1 database and put its ID in `worker/wrangler.toml`.
+2. Run `pnpm install`, then `pnpm worker:db:migrate:remote`.
+3. Generate a password hash without displaying the password: `pnpm worker:hash-password`. Store the result with `wrangler secret put ADMIN_PASSWORD_HASH` from `worker/`.
+4. Generate a long random session secret and run `wrangler secret put SESSION_SECRET`.
+5. Set the Worker `ALLOWED_ORIGINS` variable to the exact Pages origin, and keep `SESSION_TTL_SECONDS` between 900 and 86400.
+6. Deploy with `pnpm worker:deploy`. The admin URL will be `https://<worker-subdomain>.workers.dev/admin` or the custom Worker domain you configure.
+7. Set `NEXT_PUBLIC_ANALYTICS_ENDPOINT` to the Worker URL ending in `/analytics`, rebuild Pages, and deploy `out/`.
+
+The Worker stores daily UTC path/country aggregates for 90 days. It does not store raw IP addresses, filenames, file contents, query strings, fingerprints, or persistent visitor IDs. Login sessions and rate-limit records are separate from analytics and are expired by the scheduled cleanup.
 
 ## Browser limitations
 
