@@ -4,8 +4,7 @@ compatibility_date = "2026-09-15"
 workers_dev = true
 
 [vars]
-ALLOWED_ORIGINS = "https://filekind.pages.dev,http://localhost:3000"
-SESSION_TTL_SECONDS = "28800"
+ALLOWED_ORIGINS = "https://filekind.muhammadhassangul01.workers.dev,http://localhost:3000"
 
 [triggers]
 crons = ["0 3 * * *"]
@@ -13,5 +12,5 @@ crons = ["0 3 * * *"]
 [[d1_databases]]
 binding = "DB"
 database_name = "filekind-analytics"
-database_id = "9f9b21d9-2c61-4a53-b44c-0137af954d90"
+database_id = "c8e5618c-b5f1-46f4-8573-dcc1fc1b562d"
 migrations_dir = "migrations"
