@@ -8,7 +8,7 @@ type Report = { from: string; to: string; total: number; pages: Row[]; countries
 
 const USERNAME = "admin";
 const PASSWORD = "123_AbC#";
-const analyticsEndpoint = process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT ?? "";
+const analyticsEndpoint = process.env.NEXT_PUBLIC_ANALYTICS_ENDPOINT ?? "https://filekind-analytics.muhammadhassangul01.workers.dev/analytics";
 const dataEndpoint = process.env.NEXT_PUBLIC_ANALYTICS_DATA_ENDPOINT ?? analyticsEndpoint.replace(/\/analytics\/?$/, "/data");
 
 export default function AdminDashboard() {

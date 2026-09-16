@@ -2,7 +2,9 @@ export const MAX_INPUT_BYTES = 25_000_000;
 export const MAX_DIMENSION = 16_000;
 export const MAX_PIXELS = 48_000_000;
 
-export type ImageInfo = { width: number; height: number; url: string };
+export type ImageInfo = { width: number; height: number; url: string; image: HTMLImageElement };
+export type CompressionAttempt = { attempt: number; width: number; height: number; quality: number; bytes: number; durationMs: number };
+export type CompressionMetrics = { decodeCount: number; decodeTimeMs: number; encodeCount: number; encodeTimeMs: number; attempts: CompressionAttempt[] };
 
 export function formatBytes(bytes: number): string {
   if (bytes < 1_000) return `${bytes} B`;
@@ -60,7 +62,7 @@ export async function decodeImage(file: File): Promise<ImageInfo> {
     if (image.naturalWidth > MAX_DIMENSION || image.naturalHeight > MAX_DIMENSION || pixels > MAX_PIXELS) {
       throw new Error(`This image is ${image.naturalWidth.toLocaleString()} x ${image.naturalHeight.toLocaleString()} px. Use an image up to ${MAX_DIMENSION.toLocaleString()} px per side and ${MAX_PIXELS / 1_000_000} megapixels.`);
     }
-    return { width: image.naturalWidth, height: image.naturalHeight, url };
+    return { width: image.naturalWidth, height: image.naturalHeight, url, image };
   } catch (error) {
     URL.revokeObjectURL(url);
     throw error instanceof Error ? error : new Error("This image could not be decoded.");
@@ -71,13 +73,14 @@ export function releaseImage(info: ImageInfo | null): void {
   if (info) URL.revokeObjectURL(info.url);
 }
 
-async function orientedSource(file: File, url: string): Promise<ImageBitmap | HTMLImageElement> {
+async function orientedSource(file: File, url: string, fallbackImage?: HTMLImageElement): Promise<ImageBitmap | HTMLImageElement> {
   if (typeof createImageBitmap === "function") {
     try {
       return await createImageBitmap(file, { imageOrientation: "from-image" });
     } catch {
     }
   }
+  if (fallbackImage) return fallbackImage;
   const image = new Image();
   image.src = url;
   await image.decode();
@@ -100,9 +103,11 @@ export async function canvasBlob(canvas: HTMLCanvasElement, quality: number): Pr
   return blob;
 }
 
-export async function compressToTarget(file: File, targetBytes: number, signal?: AbortSignal): Promise<{ blob: Blob; width: number; height: number }> {
-  const info = await decodeImage(file);
-  const source = await orientedSource(file, info.url);
+export async function compressToTarget(file: File, targetBytes: number, signal?: AbortSignal, selectedInfo?: ImageInfo): Promise<{ blob: Blob; width: number; height: number; metrics: CompressionMetrics }> {
+  const decodeStarted = performance.now();
+  const info = selectedInfo ?? await decodeImage(file);
+  const metrics: CompressionMetrics = { decodeCount: selectedInfo ? 0 : 1, decodeTimeMs: selectedInfo ? 0 : performance.now() - decodeStarted, encodeCount: 0, encodeTimeMs: 0, attempts: [] };
+  const source = await orientedSource(file, info.url, info.image);
   const dimensions = sourceDimensions(source);
   let width = dimensions.width;
   let height = dimensions.height;
@@ -120,22 +125,35 @@ export async function compressToTarget(file: File, targetBytes: number, signal?:
       context.fillRect(0, 0, width, height);
       context.drawImage(source, 0, 0, width, height);
 
-      let low = 0.35;
-      let high = 0.92;
-      for (let pass = 0; pass < 8; pass += 1) {
-        if (signal?.aborted) throw new DOMException("Compression cancelled", "AbortError");
-        const quality = (low + high) / 2;
+      const encode = async (quality: number) => {
+        const started = performance.now();
         const blob = await canvasBlob(canvas, quality);
-        if (blob.size <= targetBytes) {
-          best = { blob, width, height };
-          low = quality;
-        } else {
-          high = quality;
+        const durationMs = performance.now() - started;
+        metrics.encodeCount += 1;
+        metrics.encodeTimeMs += durationMs;
+        metrics.attempts.push({ attempt, width, height, quality, bytes: blob.size, durationMs });
+        return blob;
+      };
+      const minimum = await encode(0.35);
+      if (minimum.size <= targetBytes) {
+        best = { blob: minimum, width, height };
+        const maximum = await encode(0.92);
+        if (maximum.size <= targetBytes) return { ...best, blob: maximum, metrics };
+        let low = 0.35;
+        let high = 0.92;
+        for (let pass = 0; pass < 4; pass += 1) {
+          if (signal?.aborted) throw new DOMException("Compression cancelled", "AbortError");
+          const quality = (low + high) / 2;
+          const blob = await encode(quality);
+          if (blob.size <= targetBytes) {
+            best = { blob, width, height };
+            low = quality;
+          } else {
+            high = quality;
+          }
         }
+        return { ...best, metrics };
       }
-      const lowest = await canvasBlob(canvas, 0.35);
-      if (lowest.size <= targetBytes) best = { blob: lowest, width, height };
-      if (best) return best;
       width = Math.max(320, Math.floor(width * 0.82));
       height = Math.max(320, Math.floor(height * 0.82));
       if (width === 320 && height === 320) break;

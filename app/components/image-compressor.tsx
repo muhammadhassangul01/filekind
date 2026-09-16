@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ToolLayout, { FileDrop, PageFooter } from "./tool-layout";
-import { compressToTarget, formatBytes, formatDimensions, releaseImage, validateInput, decodeImage, type ImageInfo } from "./image-utils";
+import { compressToTarget, formatBytes, formatDimensions, releaseImage, validateInput, decodeImage, type CompressionMetrics, type ImageInfo } from "./image-utils";
 
 type Result = { blob: Blob; url: string; width: number; height: number };
+const now = () => performance.now();
 
 export default function ImageCompressor() {
   const [file, setFile] = useState<File | null>(null);
@@ -22,11 +23,13 @@ export default function ImageCompressor() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
+  const selectionJobRef = useRef(0);
+  const workerRef = useRef<Worker | null>(null);
   const actionRef = useRef<HTMLButtonElement | null>(null);
   const resultHeadingRef = useRef<HTMLHeadingElement | null>(null);
   useEffect(() => () => { releaseImage(source); }, [source]);
   useEffect(() => () => { if (result) URL.revokeObjectURL(result.url); }, [result]);
-  useEffect(() => () => { abortRef.current?.abort(); }, []);
+  useEffect(() => () => { abortRef.current?.abort(); workerRef.current?.terminate(); }, []);
   useEffect(() => {
     if (actionRef.current) actionRef.current.disabled = busy || !file;
   }, [busy, file]);
@@ -57,12 +60,16 @@ export default function ImageCompressor() {
   }
 
   async function chooseFile(nextFile: File) {
+    const selectionJob = ++selectionJobRef.current;
+    const selectionStarted = now();
     abortRef.current?.abort();
     setBusy(false); setError(""); setStatus(""); clearResult(); setSource(null); setFile(null);
     const validationError = validateInput(nextFile, ["image/jpeg", "image/png"]);
     if (validationError) { setError(validationError); return; }
     try {
       const info = await decodeImage(nextFile);
+      if (selectionJob !== selectionJobRef.current) { releaseImage(info); return; }
+      console.info("[Filekind compression] selection", { selectionToReadyMs: now() - selectionStarted, decodeCount: 1, decodeTimeMs: now() - selectionStarted, width: info.width, height: info.height });
       setFile(nextFile); setSource(info); setStatus("Image ready to compress.");
     } catch (decodeError) { setError(decodeError instanceof Error ? decodeError.message : "This image could not be decoded."); }
   }
@@ -74,9 +81,12 @@ export default function ImageCompressor() {
     if (!Number.isFinite(numericTarget) || numericTarget < 1_000 || numericTarget > 50_000_000) { setError("Enter a target between 1 KB and 50 MB."); return; }
     setBusy(true); setError(""); setStatus("Compressing locally..."); clearResult();
     const controller = new AbortController(); abortRef.current = controller;
+    const jobId = crypto.randomUUID();
+    const generateStarted = now();
     try {
-      const output = await compressToTarget(file, numericTarget, controller.signal);
+      const output = await compressFile(file, numericTarget, controller.signal, source, jobId);
       if (output.blob.size > numericTarget) throw new Error("The output missed the target by a small amount. Try a larger target.");
+      console.info("[Filekind compression]", { generateTimeMs: now() - generateStarted, totalDecodeCount: 1 + output.metrics.decodeCount, ...output.metrics, outputBytes: output.blob.size, outputWidth: output.width, outputHeight: output.height });
       setResult({ ...output, url: URL.createObjectURL(output.blob) });
       setStatus("");
     } catch (compressionError) {
@@ -87,6 +97,36 @@ export default function ImageCompressor() {
 
   function cancel() { abortRef.current?.abort(); }
 
+  async function compressFile(nextFile: File, targetBytes: number, signal: AbortSignal, selectedInfo: ImageInfo | null, jobId: string) {
+    const workerSupported = typeof Worker !== "undefined" && typeof OffscreenCanvas !== "undefined" && typeof createImageBitmap === "function";
+    if (!workerSupported) return compressToTarget(nextFile, targetBytes, signal, selectedInfo ?? undefined);
+    const worker = new Worker("/image-compressor.worker.js");
+    workerRef.current = worker;
+    try {
+      const output = await new Promise<{ blob: Blob; width: number; height: number; metrics: CompressionMetrics }>((resolve, reject) => {
+        const cleanup = () => { worker.onmessage = null; worker.onerror = null; signal.removeEventListener("abort", abort); };
+        const abort = () => { worker.postMessage({ type: "cancel", jobId }); worker.terminate(); reject(new DOMException("Compression cancelled", "AbortError")); };
+        worker.onmessage = (event) => {
+          if (event.data?.jobId !== jobId) return;
+          cleanup();
+          if (event.data.type === "error") reject(Object.assign(new Error(event.data.message), { name: event.data.name }));
+          else resolve({ blob: new Blob([event.data.blob], { type: "image/jpeg" }), width: event.data.width, height: event.data.height, metrics: event.data.metrics });
+        };
+        worker.onerror = () => { cleanup(); reject(new Error("Worker image compression failed.")); };
+        signal.addEventListener("abort", abort, { once: true });
+        worker.postMessage({ type: "compress", file: nextFile, targetBytes, jobId });
+      });
+      return output;
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") throw error;
+      if (error instanceof Error && error.message === "Worker image compression is not supported.") return compressToTarget(nextFile, targetBytes, signal, selectedInfo ?? undefined);
+      throw error;
+    } finally {
+      worker.terminate();
+      workerRef.current = null;
+    }
+  }
+
   function adjustSettings() {
     clearResult();
     setError("");
@@ -94,7 +134,9 @@ export default function ImageCompressor() {
   }
 
   function chooseAnotherImage() {
+    selectionJobRef.current += 1;
     abortRef.current?.abort();
+    workerRef.current?.terminate();
     clearResult();
     setSource(null);
     setFile(null);
