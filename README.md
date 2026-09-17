@@ -56,6 +56,8 @@ The static Pages app serves `/admin` like the other pages. It uses the simple cr
 
 The Worker stores daily UTC page/country aggregates for 90 days. It does not store raw IP addresses, filenames, file contents, query strings, fingerprints, or persistent visitor IDs.
 
+The Worker also stores daily aggregate clicks for public buttons and links, grouped by page and normalized event label. The admin dashboard reports today, 7 days, 30 days, and all time. All-time data remains across Pages and Worker deployments because migrations do not delete the analytics tables. For a deliberate test-data reset, set a Worker secret with `pnpm --dir worker exec wrangler secret put ANALYTICS_RESET_TOKEN`, redeploy the Worker, enter that token in the admin dashboard, and use Reset all data. Remove or rotate the secret after testing. These metrics count events/page views, not unique people.
+
 ## Browser limitations
 
 Very large or highly detailed images may not be able to reach an unusually small target without an impractical loss of dimensions. JPEG encoding also varies slightly by browser, so the compressor verifies the final Blob and only reports success when it is at or below the requested byte limit.
