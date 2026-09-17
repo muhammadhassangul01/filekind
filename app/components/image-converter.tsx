@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ToolLayout, { FileDrop, PageFooter } from "./tool-layout";
+import { ConvertSeoContent } from "./seo-content";
 import { convertImage, decodeImage, detectImageFormat, formatBytes, formatDimensions, formatLabel, imageMimeTypes, isAnimatedWebP, releaseImage, validateInput, type ImageFormat, type ImageInfo } from "./image-utils";
 
 type Result = { blob: Blob; url: string; width: number; height: number; format: ImageFormat };
@@ -78,6 +79,6 @@ export default function ImageConverter({ from, to }: { from?: string; to?: strin
       {source && file ? <div className="selected-file"><img src={source.url} alt={`Preview of ${file.name}`} /><div className="selected-file-details"><strong title={file.name} aria-label={`Selected file: ${file.name}`}>{file.name}</strong><span>{formatLabel(inputFormat ?? "png")} · {formatBytes(file.size)} · {formatDimensions(source.width, source.height)}</span></div><label className="change-image" htmlFor="convert-file">Change image<input className="file-input" id="convert-file" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { const nextFile = event.target.files?.[0]; if (nextFile) void chooseFile(nextFile); event.target.value = ""; }} disabled={busy} /></label></div> : <FileDrop inputId="convert-file" accept="image/jpeg,image/png,image/webp" onFile={chooseFile} busy={busy} />}
       <div className="controls converter-controls"><div><label className="field-label" htmlFor="output-format">Output format</label><select className="select-input format-select" id="output-format" value={outputFormat} onChange={(event) => { setOutputFormat(event.target.value as ImageFormat); setResult(null); }} suppressHydrationWarning><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div><div><button className="primary-button" type="button" onClick={convert} disabled={busy || !file}>{busy ? "Converting..." : "Generate"}</button>{busy && <button className="secondary-button" type="button" onClick={() => abortRef.current?.abort()} style={{ marginTop: 8, width: "100%" }}>Cancel</button>}</div></div>
       <p className="control-note">Animated files are rejected so animation is never silently dropped. JPG removes transparency.</p><p className="status" role="status" aria-live="polite">{status}</p>{error && <p className="message error" role="alert">{error}</p>}
-    </>}</section></div><section className="info-panel"><h2>Supported conversions</h2><p>Use this tool for JPG to PNG, PNG to JPG, JPG to WebP, or WebP to JPG. The selected file determines the input format; the preset URL only sets an initial output choice.</p></section><PageFooter />
+    </>}</section></div><ConvertSeoContent /><PageFooter />
   </ToolLayout>;
 }

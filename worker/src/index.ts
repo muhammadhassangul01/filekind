@@ -7,7 +7,7 @@ const PUBLIC_PATHS = new Set(["/", "/compress-image", "/convert-image", "/images
 const DAY = 86_400_000;
 
 function headers(extra: HeadersInit = {}) {
-  return new Headers({ "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", ...extra });
+  return new Headers({ "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", "Referrer-Policy": "no-referrer", "X-Robots-Tag": "noindex, nofollow, noarchive", ...extra });
 }
 function json(data: unknown, status = 200, extra: HeadersInit = {}) {
   return new Response(JSON.stringify(data), { status, headers: headers({ "Content-Type": "application/json; charset=utf-8", ...extra }) });

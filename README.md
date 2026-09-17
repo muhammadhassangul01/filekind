@@ -39,6 +39,12 @@ This project uses Next.js static export (`output: "export"`). In Cloudflare Page
 
 Set `NEXT_PUBLIC_SITE_URL` to the production origin before building so canonical URLs and the sitemap use the correct host. The default is `https://filekind.pages.dev`; update it when moving to a custom domain. Keep `public/_redirects` in the deployment so old converter URLs remain permanent redirects.
 
+## SEO and domain handoff
+
+The public Pages host is the canonical origin until a custom domain is connected. When connecting one, use the HTTPS hostname as `NEXT_PUBLIC_SITE_URL`, rebuild Pages, and verify that the generated canonicals, Open Graph URLs, sitemap, and robots file use that hostname. Configure permanent redirects from old public tool URLs to their matching canonical routes, including the existing `/jpg-to-png` and `/png-to-jpg` redirects; do not redirect the analytics Worker endpoints indiscriminately.
+
+Keep preview deployments out of search with the hosting provider's preview access controls or a preview-specific build configuration that emits `X-Robots-Tag: noindex, nofollow`. Robots rules are discovery guidance, not access protection. After launch, verify HTTPS redirects and the canonical hostname, complete Search Console verification, and submit the production `/sitemap.xml` URL.
+
 ## Analytics and admin
 
 The static Pages app serves `/admin` like the other pages. It uses the simple credentials `admin` and `123_AbC#`, then reads aggregate data from the Worker at `/data`. This is intentionally not secure: the credentials and dashboard are public in the browser bundle.

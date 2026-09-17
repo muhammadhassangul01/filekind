@@ -4,12 +4,23 @@ import AnalyticsBeacon from "./components/analytics-beacon";
 
 export const metadata: Metadata = {
   title: {
-    default: "Filekind | Simple image tools",
-    template: "%s | Filekind",
+    default: "Free Image and PDF Tools | Filekind",
+    template: "%s",
   },
-  description: "Compress and convert images, create PDFs, and render PDF pages locally in your browser.",
+  description: "Free browser tools to compress and convert images, create PDFs, and render PDF pages on your device.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://filekind.pages.dev"),
   icons: { icon: "/favicon.svg" },
+  openGraph: {
+    type: "website",
+    siteName: "Filekind",
+    title: "Free Image and PDF Tools | Filekind",
+    description: "Free browser tools to compress and convert images, create PDFs, and render PDF pages on your device.",
+  },
+  twitter: {
+    card: "summary",
+    title: "Free Image and PDF Tools | Filekind",
+    description: "Free browser tools to compress and convert images, create PDFs, and render PDF pages on your device.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

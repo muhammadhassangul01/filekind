@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ToolLayout, { FileDrop, PageFooter } from "./tool-layout";
+import { CompressSeoContent } from "./seo-content";
 import { compressToTarget, formatBytes, formatDimensions, releaseImage, validateInput, decodeImage, type CompressionMetrics, type ImageInfo } from "./image-utils";
 
 type Result = { blob: Blob; url: string; width: number; height: number };
@@ -171,6 +172,6 @@ export default function ImageCompressor() {
       </section>
     </div>
     <div className="support-strip"><span><strong>Private</strong> Files stay in your browser.</span><span><strong>Limits</strong> Up to 25 MB, 16,000 px per side, and 48 MP.</span></div>
-    <section className="info-panel"><h2>Compress an image below a custom limit</h2><p>Choose 200 KB, 500 KB, or enter another limit in KB or MB. <Link href="/compress-image?targetKB=200">Set a 200 KB target</Link> to start with a smaller file.</p></section><PageFooter />
+    <CompressSeoContent /><p className="info-panel preset-link">Start with a <Link href="/compress-image?targetKB=200">200 KB target</Link>; the preset changes the starting value on this page and is not a separate tool.</p><PageFooter />
   </ToolLayout>;
 }

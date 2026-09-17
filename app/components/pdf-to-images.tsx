@@ -15,9 +15,17 @@ export default function PdfToImages() {
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const abortRef = useRef<AbortController | null>(null);
+  const pagesRef = useRef<PageImage[]>([]);
 
-  useEffect(() => () => { pages.forEach((page) => URL.revokeObjectURL(page.url)); }, [pages]);
+  useEffect(() => { pagesRef.current = pages; }, [pages]);
+  useEffect(() => () => { pagesRef.current.forEach((page) => URL.revokeObjectURL(page.url)); }, []);
   useEffect(() => () => abortRef.current?.abort(), []);
+
+  function clearPages() {
+    pagesRef.current.forEach((page) => URL.revokeObjectURL(page.url));
+    pagesRef.current = [];
+    setPages([]);
+  }
 
   function chooseFile(nextFile: File) {
     if (nextFile.type !== "application/pdf") { setError("Choose a PDF file."); return; }
@@ -27,7 +35,7 @@ export default function PdfToImages() {
 
   async function generate() {
     if (!file || busy) return;
-    setBusy(true); setPages([]); setError(""); setStatus("Opening PDF locally...");
+    setBusy(true); clearPages(); setError(""); setStatus("Opening PDF locally...");
     const controller = new AbortController(); abortRef.current = controller;
     const created: PageImage[] = [];
     let cleanupPdf: (() => void) | null = null;
@@ -85,5 +93,16 @@ export default function PdfToImages() {
     const url = URL.createObjectURL(blob); const link = document.createElement("a"); link.href = url; link.download = "filekind-pages.zip"; link.click(); URL.revokeObjectURL(url);
   }
 
-  return <ToolLayout active="pdf-images"><section className="intro"><h1>Convert PDF Pages to JPG or PNG</h1><p className="intro-copy">Render each complete PDF page as an image locally. Embedded pictures are not extracted.</p></section><div className="tool-grid"><section className="tool-panel" aria-labelledby="pdf-images-heading"><div className="panel-heading"><div><h2 id="pdf-images-heading">{pages.length ? `${pages.length} pages ready` : "Choose a PDF"}</h2><p className="small-note">Up to 50 MB, 100 pages, and 150 MB total output</p></div></div>{!pages.length && <><label className="dropzone" htmlFor="pdf-file"><span className="upload-icon" aria-hidden="true">+</span><strong>{file ? file.name : "Choose a PDF"}</strong><span>{file ? formatBytes(file.size) : "PDF pages stay on this device"}</span><input className="file-input" id="pdf-file" type="file" accept="application/pdf" onChange={(event) => { const nextFile = event.target.files?.[0]; if (nextFile) chooseFile(nextFile); event.target.value = ""; }} disabled={busy} /></label><div className="controls converter-controls"><div><label className="field-label" htmlFor="image-format">Image format</label><select className="select-input format-select" id="image-format" value={format} onChange={(event) => setFormat(event.target.value as "jpg" | "png")}><option value="jpg">JPG</option><option value="png">PNG</option></select></div><div><button className="primary-button" type="button" onClick={generate} disabled={busy || !file}>{busy ? "Rendering..." : "Generate images"}</button>{busy && <button className="secondary-button" type="button" onClick={() => abortRef.current?.abort()} style={{ marginTop: 8, width: "100%" }}>Cancel</button>}</div></div></>}{pages.length > 0 && <><button className="primary-button" type="button" onClick={() => void downloadAll()}>Download all ZIP</button><div className="page-thumbnails">{pages.map((page) => <article className="page-thumbnail" key={page.name}><img src={page.url} alt={`Preview of ${page.name}`} /><strong>{page.name}</strong><a className="secondary-button" href={page.url} download={page.name}>Download page</a></article>)}</div><button className="secondary-button" type="button" onClick={() => { setPages([]); setFile(null); setStatus(""); }}>Choose another PDF</button></>}{status && <p className="status" role="status" aria-live="polite">{status}</p>}{error && <p className="message error" role="alert">{error}</p>}</section></div><section className="info-panel"><h2>Conservative processing limits</h2><p>Files are rendered sequentially with bounded resolution to keep memory use predictable. Password-protected and corrupt PDFs are rejected with a clear message.</p></section><PageFooter /></ToolLayout>;
+  function downloadPage(page: PageImage) {
+    const url = URL.createObjectURL(page.blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = page.name;
+    link.rel = "noopener";
+    document.body.appendChild(link);
+    link.click();
+    window.setTimeout(() => { link.remove(); URL.revokeObjectURL(url); }, 10_000);
+  }
+
+  return <ToolLayout active="pdf-images"><section className="intro"><h1>Convert PDF Pages to JPG or PNG</h1><p className="intro-copy">Render each complete PDF page as an image locally. Embedded pictures are not extracted.</p></section><div className="tool-grid"><section className="tool-panel" aria-labelledby="pdf-images-heading"><div className="panel-heading"><div><h2 id="pdf-images-heading">{pages.length ? `${pages.length} pages ready` : "Choose a PDF"}</h2><p className="small-note">Up to 50 MB, 100 pages, and 150 MB total output</p></div></div>{!pages.length && <><label className="dropzone" htmlFor="pdf-file"><span className="upload-icon" aria-hidden="true">+</span><strong>{file ? file.name : "Choose a PDF"}</strong><span>{file ? formatBytes(file.size) : "PDF pages stay on this device"}</span><input className="file-input" id="pdf-file" type="file" accept="application/pdf" onChange={(event) => { const nextFile = event.target.files?.[0]; if (nextFile) chooseFile(nextFile); event.target.value = ""; }} disabled={busy} /></label><div className="controls converter-controls"><div><label className="field-label" htmlFor="image-format">Image format</label><select className="select-input format-select" id="image-format" value={format} onChange={(event) => setFormat(event.target.value as "jpg" | "png")}><option value="jpg">JPG</option><option value="png">PNG</option></select></div><div><button className="primary-button" type="button" onClick={generate} disabled={busy || !file}>{busy ? "Rendering..." : "Generate images"}</button>{busy && <button className="secondary-button" type="button" onClick={() => abortRef.current?.abort()} style={{ marginTop: 8, width: "100%" }}>Cancel</button>}</div></div></>}{pages.length > 0 && <><button className="primary-button" type="button" onClick={() => void downloadAll()}>Download all ZIP</button><div className="page-thumbnails">{pages.map((page) => <article className="page-thumbnail" key={page.name}><img src={page.url} alt={`Preview of ${page.name}`} /><strong>{page.name}</strong><button className="secondary-button" type="button" onClick={() => downloadPage(page)}>Download page</button></article>)}</div><button className="secondary-button" type="button" onClick={() => { clearPages(); setFile(null); setStatus(""); }}>Choose another PDF</button></>}{status && <p className="status" role="status" aria-live="polite">{status}</p>}{error && <p className="message error" role="alert">{error}</p>}</section></div><section className="info-panel"><h2>Conservative processing limits</h2><p>Files are rendered sequentially with bounded resolution to keep memory use predictable. Password-protected and corrupt PDFs are rejected with a clear message.</p></section><PageFooter /></ToolLayout>;
 }
