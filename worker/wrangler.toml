@@ -4,7 +4,7 @@ compatibility_date = "2026-09-15"
 workers_dev = true
 
 [vars]
-ALLOWED_ORIGINS = "https://filekind.muhammadhassangul01.workers.dev,http://localhost:3000"
+ALLOWED_ORIGINS = "https://filekind.muhammadhassangul01.workers.dev,https://filekind.pages.dev,http://localhost:3000"
 
 [triggers]
 crons = ["0 3 * * *"]
