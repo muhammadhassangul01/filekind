@@ -37,7 +37,7 @@ This project uses Next.js static export (`output: "export"`). In Cloudflare Page
 - Build output directory: `out`
 - Node.js version: `20` or newer
 
-If the project is using Cloudflare Workers Builds rather than Pages Git integration, use `pnpm build` as the build command and `pnpm run site:deploy` as the deploy command. Do not use `npx wrangler deploy`: the site config is `wrangler.site.toml`, while the analytics Worker has its own config under `worker/`. For Pages Git integration, leave the deploy command empty because Pages publishes the `out/` directory itself.
+If the project is using Cloudflare Workers Builds rather than Pages Git integration, use `pnpm build` as the build command and `pnpm deploy` as the deploy command. (`pnpm run site:deploy` is equivalent.) Do not use `pnpm worker:deploy` or `npx wrangler deploy` for the site: those deploy the analytics Worker. The site config is `wrangler.site.toml`, while the analytics Worker has its own config under `worker/`. For Pages Git integration, leave the deploy command empty because Pages publishes the `out/` directory itself.
 
 Set `NEXT_PUBLIC_SITE_URL` to the production origin before building so canonical URLs and the sitemap use the correct host. The default is `https://filekind.pages.dev`; update it when moving to a custom domain. Keep `public/_redirects` in the deployment so old converter URLs remain permanent redirects.
 
