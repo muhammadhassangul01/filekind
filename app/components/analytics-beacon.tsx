@@ -15,7 +15,7 @@ export default function AnalyticsBeacon() {
     sentPath.current = pathname;
     const endpoint = analyticsEndpoint;
     const hostname = window.location.hostname;
-    const configuredSite = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://filekind.com").replace(/\/$/, "");
+    const configuredSite = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://filekind.tech").replace(/\/$/, "");
     if (!endpoint || hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".local") || (configuredSite && window.location.origin !== configuredSite)) return;
     const send = (event?: string) => void fetch(endpoint, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(event ? { path: pathname, event } : { path: pathname }), keepalive: true }).catch(() => undefined);
     send();

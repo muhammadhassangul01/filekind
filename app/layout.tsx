@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     template: "%s",
   },
   description: "Free browser tools to compress and convert images, create PDFs, and render PDF pages on your device.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://filekind.com"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://filekind.tech"),
   icons: { icon: "/favicon.svg" },
   openGraph: {
     type: "website",
