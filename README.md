@@ -39,11 +39,11 @@ This project uses Next.js static export (`output: "export"`). In Cloudflare Page
 
 If the project is using Cloudflare Workers Builds rather than Pages Git integration, use `pnpm build` as the build command and `pnpm deploy` as the deploy command. (`pnpm run site:deploy` is equivalent.) Do not use `pnpm worker:deploy` or `npx wrangler deploy` for the site: those deploy the analytics Worker. The site config is `wrangler.site.toml`, while the analytics Worker has its own config under `worker/`. For Pages Git integration, leave the deploy command empty because Pages publishes the `out/` directory itself.
 
-Set `NEXT_PUBLIC_SITE_URL` to the production origin before building so canonical URLs and the sitemap use the correct host. The default is `https://filekind.pages.dev`; update it when moving to a custom domain. Keep `public/_redirects` in the deployment so old converter URLs remain permanent redirects.
+Set `NEXT_PUBLIC_SITE_URL` to the production origin before building so canonical URLs and the sitemap use the correct host. The production default is `https://filekind.tech`; override it for local or preview builds. Keep `public/_redirects` in the deployment so old converter URLs remain permanent redirects.
 
 ## SEO and domain handoff
 
-The public Pages host is the canonical origin until a custom domain is connected. When connecting one, use the HTTPS hostname as `NEXT_PUBLIC_SITE_URL`, rebuild Pages, and verify that the generated canonicals, Open Graph URLs, sitemap, and robots file use that hostname. Configure permanent redirects from old public tool URLs to their matching canonical routes, including the existing `/jpg-to-png` and `/png-to-jpg` redirects; do not redirect the analytics Worker endpoints indiscriminately.
+The canonical origin is `https://filekind.tech`. Keep the custom domain on HTTPS, rebuild Pages after changing the site URL, and verify that the generated canonicals, Open Graph URLs, sitemap, and robots file use that hostname. Configure permanent redirects from old public tool URLs to their matching canonical routes, including the existing `/jpg-to-png` and `/png-to-jpg` redirects; do not redirect the analytics Worker endpoints indiscriminately.
 
 Keep preview deployments out of search with the hosting provider's preview access controls or a preview-specific build configuration that emits `X-Robots-Tag: noindex, nofollow`. Robots rules are discovery guidance, not access protection. After launch, verify HTTPS redirects and the canonical hostname, complete Search Console verification, and submit the production `/sitemap.xml` URL.
 
