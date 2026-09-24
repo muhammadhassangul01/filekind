@@ -12,7 +12,7 @@ function presetFormat(value: string | null): ImageFormat | null {
   return formats.includes(value as ImageFormat) ? value as ImageFormat : null;
 }
 
-export default function ImageConverter({ from, to }: { from?: string; to?: string }) {
+export default function ImageConverter({ from, to, title, introCopy }: { from?: string; to?: string; title?: string; introCopy?: string }) {
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<ImageInfo | null>(null);
   const [inputFormat, setInputFormat] = useState<ImageFormat | null>(() => presetFormat(from ?? (typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("from"))));
@@ -21,6 +21,8 @@ export default function ImageConverter({ from, to }: { from?: string; to?: strin
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
+  const sourceFormat = presetFormat(from ?? null);
+  const targetFormat = presetFormat(to ?? null);
   const abortRef = useRef<AbortController | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
 
@@ -67,7 +69,7 @@ export default function ImageConverter({ from, to }: { from?: string; to?: strin
   function chooseAnother() { abortRef.current?.abort(); setResult(null); setSource(null); setFile(null); setInputFormat(null); setBusy(false); setError(""); setStatus(""); }
 
   return <ToolLayout active="converter">
-    <section className="intro"><h1>Convert JPG, PNG and WebP images</h1><p className="intro-copy">Convert supported image formats privately in your browser, including JPG to PNG and WebP to JPG.</p></section>
+    <section className="intro"><h1>{title ?? "Convert JPG, PNG and WebP images"}</h1><p className="intro-copy">{introCopy ?? "Convert supported image formats privately in your browser, including JPG to PNG and WebP to JPG."}</p></section>
     <div className="tool-grid"><section className="tool-panel" aria-labelledby={result ? "convert-result-heading" : "convert-heading"}>{result ? <div className="success-state">
       <h2 className="success-heading" id="convert-result-heading" ref={headingRef} tabIndex={-1}>Your image is ready</h2><p className="success-confirmation">{formatLabel(result.format)} output: <strong>{formatBytes(result.blob.size)}</strong>.</p>
       <a className="primary-button success-download" href={result.url} download={`${file?.name.replace(/\.[^.]+$/, "") || "image"}.${result.format}`}>Download {formatLabel(result.format)}</a>
@@ -79,6 +81,6 @@ export default function ImageConverter({ from, to }: { from?: string; to?: strin
       {source && file ? <div className="selected-file"><img src={source.url} alt={`Preview of ${file.name}`} /><div className="selected-file-details"><strong title={file.name} aria-label={`Selected file: ${file.name}`}>{file.name}</strong><span>{formatLabel(inputFormat ?? "png")} · {formatBytes(file.size)} · {formatDimensions(source.width, source.height)}</span></div><label className="change-image" htmlFor="convert-file">Change image<input className="file-input" id="convert-file" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => { const nextFile = event.target.files?.[0]; if (nextFile) void chooseFile(nextFile); event.target.value = ""; }} disabled={busy} /></label></div> : <FileDrop inputId="convert-file" accept="image/jpeg,image/png,image/webp" onFile={chooseFile} busy={busy} />}
       <div className="controls converter-controls"><div><label className="field-label" htmlFor="output-format">Output format</label><select className="select-input format-select" id="output-format" value={outputFormat} onChange={(event) => { setOutputFormat(event.target.value as ImageFormat); setResult(null); }} suppressHydrationWarning><option value="jpg">JPG</option><option value="png">PNG</option><option value="webp">WebP</option></select></div><div><button className="primary-button" type="button" onClick={convert} disabled={busy || !file}>{busy ? "Converting..." : "Generate"}</button>{busy && <button className="secondary-button" type="button" onClick={() => abortRef.current?.abort()} style={{ marginTop: 8, width: "100%" }}>Cancel</button>}</div></div>
       <p className="control-note">Animated files are rejected so animation is never silently dropped. JPG removes transparency.</p><p className="status" role="status" aria-live="polite">{status}</p>{error && <p className="message error" role="alert">{error}</p>}
-    </>}</section></div><ConvertSeoContent /><PageFooter />
+    </>}</section></div>{sourceFormat && targetFormat && <section className="info-panel seo-content" aria-labelledby="pair-guide"><h2 id="pair-guide">How to convert {formatLabel(sourceFormat)} to {formatLabel(targetFormat)}</h2><p>Choose a {formatLabel(sourceFormat)} image, select {formatLabel(targetFormat)} as the output, and generate the converted file. Processing happens locally in your browser, so the original image is not uploaded.</p><p>Use this conversion when an app or website requires a specific image format. JPG is widely compatible, PNG preserves transparency, and WebP can reduce file size for modern websites.</p></section>}<ConvertSeoContent /><PageFooter />
   </ToolLayout>;
 }
