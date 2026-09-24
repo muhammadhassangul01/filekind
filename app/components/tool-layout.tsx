@@ -23,7 +23,7 @@ export default function ToolLayout({
   return (
     <>
       <header className="site-header">
-        <Link className="brand" href="/" aria-label="Filekind home"><span className="brand-mark" aria-hidden="true" />Filekind</Link>
+        <Link className="brand" href="/" aria-label="Filekind home"><span className="brand-mark" aria-hidden="true"><span className="brand-mark-fold" /></span>Filekind</Link>
         <button className="menu-button" type="button" aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"} aria-expanded={menuOpen} aria-controls="image-tools-nav" onClick={() => setMenuOpen((open) => !open)}>
           <span className="menu-icon" aria-hidden="true"><span /><span /><span /></span>
         </button>
