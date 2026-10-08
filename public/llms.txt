@@ -1,0 +1,37 @@
+# Filekind
+
+> Free image and PDF tools that run entirely in the browser. Files are never uploaded: compression, resizing, conversion, and PDF assembly all happen on the user's device. No signup, no watermark.
+
+Filekind covers the everyday tasks that block uploads and forms: shrinking a photo to a KB limit, changing image dimensions, converting between common formats, building a PDF from pictures, and turning PDF pages back into images.
+
+## Tools
+
+- [Compress image](https://filekind.tech/compress-image): Reduce a JPEG or PNG to a custom KB or MB limit; the result is verified at or below the target.
+- [Resize image](https://filekind.tech/resize-image): Set exact pixels or a percentage, with an aspect-ratio lock and JPG or PNG output.
+- [Convert image](https://filekind.tech/convert-image): Convert between JPG, PNG, and static WebP in any direction.
+- [Images to PDF](https://filekind.tech/images-to-pdf): Arrange images into one PDF, with fit, A4, or Letter page sizes and margins.
+- [PDF to images](https://filekind.tech/pdf-to-images): Render each complete PDF page as a JPG or PNG, downloadable individually or as a ZIP.
+- [JPG to PDF](https://filekind.tech/jpg-to-pdf), [PNG to PDF](https://filekind.tech/png-to-pdf), [WebP to PDF](https://filekind.tech/webp-to-pdf): Single-format routes into the PDF builder.
+- [PDF to JPG](https://filekind.tech/pdf-to-jpg), [PDF to PNG](https://filekind.tech/pdf-to-png): Single-format routes out of the PDF renderer.
+
+## Guides
+
+- [All guides](https://filekind.tech/guides): Step-by-step instructions for compressing, converting, resizing, and building documents.
+- [Compress a photo to 200 KB](https://filekind.tech/guides/how-to-compress-a-photo-to-200kb)
+- [Reduce image size in KB](https://filekind.tech/guides/how-to-reduce-image-size-in-kb)
+- [Convert JPG to PNG](https://filekind.tech/guides/how-to-convert-jpg-to-png)
+- [Make a PDF from photos](https://filekind.tech/guides/how-to-make-a-pdf-from-photos)
+- [Resize an image](https://filekind.tech/guides/how-to-resize-an-image)
+
+## Reference
+
+- [Image and PDF glossary](https://filekind.tech/glossary): Plain-language definitions of JPEG, PNG, WebP, resolution, DPI, compression, and more.
+- [Format comparisons](https://filekind.tech/compare): JPG vs PNG, WebP vs JPG, lossy vs lossless, A4 vs Letter, and related trade-offs.
+- [Image tools hub](https://filekind.tech/image-tools) and [PDF tools hub](https://filekind.tech/pdf-tools).
+- [Site directory](https://filekind.tech/directory): Every page on the site.
+
+## Optional
+
+- Image input limits: 25 MB, 16,000 pixels per side, 48 megapixels. PDF input: 50 MB, 100 pages.
+- Supported image formats: JPEG, PNG, static WebP. Not supported: HEIC, GIF, BMP, TIFF, SVG, AVIF, animated WebP.
+- Filekind does not provide OCR, PDF editing, PDF compression, cropping, rotating, watermarking, or batch processing.

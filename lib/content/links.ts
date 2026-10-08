@@ -1,0 +1,175 @@
+import type { InternalLink } from "./types";
+
+export type SiteLink = InternalLink;
+
+/** Every public tool page on the site. Order matters: it is the display order in hubs and the footer. */
+export const toolLinks: SiteLink[] = [
+  { href: "/compress-image", label: "Compress image" },
+  { href: "/resize-image", label: "Resize image" },
+  { href: "/convert-image", label: "Convert image" },
+  { href: "/images-to-pdf", label: "Images to PDF" },
+  { href: "/pdf-to-images", label: "PDF to images" },
+  { href: "/jpg-to-pdf", label: "JPG to PDF" },
+  { href: "/png-to-pdf", label: "PNG to PDF" },
+  { href: "/webp-to-pdf", label: "WebP to PDF" },
+  { href: "/pdf-to-jpg", label: "PDF to JPG" },
+  { href: "/pdf-to-png", label: "PDF to PNG" },
+];
+
+export const converterLinks: SiteLink[] = [
+  { href: "/convert-image/jpg-to-png", label: "JPG to PNG" },
+  { href: "/convert-image/jpg-to-webp", label: "JPG to WebP" },
+  { href: "/convert-image/png-to-jpg", label: "PNG to JPG" },
+  { href: "/convert-image/png-to-webp", label: "PNG to WebP" },
+  { href: "/convert-image/webp-to-jpg", label: "WebP to JPG" },
+  { href: "/convert-image/webp-to-png", label: "WebP to PNG" },
+];
+
+export const hubLinks: SiteLink[] = [
+  { href: "/image-tools", label: "All image tools" },
+  { href: "/pdf-tools", label: "All PDF tools" },
+  { href: "/guides", label: "Guides" },
+  { href: "/glossary", label: "Image format glossary" },
+  { href: "/compare", label: "Format comparisons" },
+  { href: "/directory", label: "Site directory" },
+];
+
+export const guideLinks: SiteLink[] = [
+  { href: "/guides/how-to-compress-a-photo-to-200kb", label: "Compress a photo to 200 KB" },
+  { href: "/guides/how-to-reduce-image-size-in-kb", label: "Reduce image size in KB" },
+  { href: "/guides/how-to-compress-a-picture-for-email", label: "Compress a picture for email" },
+  { href: "/guides/how-to-shrink-a-photo-for-whatsapp", label: "Shrink a photo for WhatsApp" },
+  { href: "/guides/how-to-reduce-image-size-for-instagram", label: "Reduce image size for Instagram" },
+  { href: "/guides/compress-image-for-government-form", label: "Compress an image for a government form" },
+  { href: "/guides/reduce-image-size-for-job-application", label: "Reduce image size for a job application" },
+  { href: "/guides/reduce-image-size-for-college-admission-form", label: "Reduce photo size for a college form" },
+  { href: "/guides/how-to-convert-jpg-to-png", label: "Convert JPG to PNG" },
+  { href: "/guides/how-to-convert-png-to-jpg", label: "Convert PNG to JPG" },
+  { href: "/guides/how-to-convert-webp-to-jpg", label: "Convert WebP to JPG" },
+  { href: "/guides/how-to-convert-jpg-to-webp", label: "Convert JPG to WebP" },
+  { href: "/guides/how-to-convert-webp-to-png", label: "Convert WebP to PNG" },
+  { href: "/guides/how-to-convert-png-to-webp", label: "Convert PNG to WebP" },
+  { href: "/guides/how-to-change-an-image-file-type", label: "Change an image file type" },
+  { href: "/guides/how-to-convert-images-on-iphone", label: "Convert images on iPhone" },
+  { href: "/guides/how-to-convert-images-on-android", label: "Convert images on Android" },
+  { href: "/guides/how-to-make-a-pdf-from-photos", label: "Make a PDF from photos" },
+  { href: "/guides/how-to-combine-images-into-one-pdf", label: "Combine images into one PDF" },
+  { href: "/guides/how-to-convert-pdf-to-jpg", label: "Convert a PDF to JPG" },
+  { href: "/guides/how-to-convert-pdf-to-png", label: "Convert a PDF to PNG" },
+  { href: "/guides/how-to-extract-images-from-a-pdf", label: "Extract images from a PDF" },
+  { href: "/guides/how-to-resize-an-image", label: "Resize an image" },
+  { href: "/guides/how-to-reduce-photo-resolution", label: "Reduce photo resolution" },
+  { href: "/guides/how-to-resize-a-photo-for-a-website", label: "Resize a photo for a website" },
+  { href: "/guides/how-to-make-a-photo-pdf-on-a-phone", label: "Make a photo PDF on a phone" },
+  { href: "/guides/how-to-check-an-image-file-size", label: "Check an image file size" },
+  { href: "/guides/how-to-open-a-webp-image", label: "Open a WebP image" },
+  { href: "/guides/how-to-upload-large-photos-to-a-website", label: "Upload large photos to a website" },
+  { href: "/guides/why-is-my-image-file-so-big", label: "Why your image file is so big" },
+  { href: "/guides/image-quality-vs-file-size", label: "Image quality vs file size" },
+  { href: "/guides/how-to-keep-image-quality-when-compressing", label: "Compress without losing quality" },
+];
+
+export const glossaryLinks: SiteLink[] = [
+  { href: "/glossary/jpeg", label: "JPEG" },
+  { href: "/glossary/jpg", label: "JPG" },
+  { href: "/glossary/png", label: "PNG" },
+  { href: "/glossary/webp", label: "WebP" },
+  { href: "/glossary/gif", label: "GIF" },
+  { href: "/glossary/bmp", label: "BMP" },
+  { href: "/glossary/tiff", label: "TIFF" },
+  { href: "/glossary/svg", label: "SVG" },
+  { href: "/glossary/pdf", label: "PDF" },
+  { href: "/glossary/heic", label: "HEIC" },
+  { href: "/glossary/avif", label: "AVIF" },
+  { href: "/glossary/image-compression", label: "Image compression" },
+  { href: "/glossary/lossy-compression", label: "Lossy compression" },
+  { href: "/glossary/lossless-compression", label: "Lossless compression" },
+  { href: "/glossary/resolution", label: "Resolution" },
+  { href: "/glossary/dpi", label: "DPI" },
+  { href: "/glossary/ppi", label: "PPI" },
+  { href: "/glossary/pixel", label: "Pixel" },
+  { href: "/glossary/megapixel", label: "Megapixel" },
+  { href: "/glossary/aspect-ratio", label: "Aspect ratio" },
+  { href: "/glossary/image-dimensions", label: "Image dimensions" },
+  { href: "/glossary/file-size", label: "File size" },
+  { href: "/glossary/kilobyte", label: "Kilobyte (KB)" },
+  { href: "/glossary/megabyte", label: "Megabyte (MB)" },
+  { href: "/glossary/raster-image", label: "Raster image" },
+  { href: "/glossary/vector-image", label: "Vector image" },
+  { href: "/glossary/transparency", label: "Transparency" },
+  { href: "/glossary/alpha-channel", label: "Alpha channel" },
+  { href: "/glossary/image-quality", label: "Image quality" },
+  { href: "/glossary/jpeg-artifacts", label: "JPEG artifacts" },
+  { href: "/glossary/image-resizing", label: "Image resizing" },
+  { href: "/glossary/interpolation", label: "Interpolation" },
+  { href: "/glossary/exif-data", label: "EXIF data" },
+  { href: "/glossary/color-depth", label: "Color depth" },
+  { href: "/glossary/rgb", label: "RGB" },
+  { href: "/glossary/cmyk", label: "CMYK" },
+  { href: "/glossary/grayscale", label: "Grayscale" },
+  { href: "/glossary/mime-type", label: "MIME type" },
+  { href: "/glossary/file-extension", label: "File extension" },
+  { href: "/glossary/zip-file", label: "ZIP file" },
+  { href: "/glossary/ocr", label: "OCR" },
+  { href: "/glossary/thumbnail", label: "Thumbnail" },
+  { href: "/glossary/crop", label: "Crop" },
+  { href: "/glossary/image-rotation", label: "Image rotation" },
+  { href: "/glossary/watermark", label: "Watermark" },
+  { href: "/glossary/batch-processing", label: "Batch processing" },
+  { href: "/glossary/static-webp", label: "Static WebP" },
+  { href: "/glossary/image-format", label: "Image format" },
+  { href: "/glossary/upload-limit", label: "Upload limit" },
+  { href: "/glossary/compression-ratio", label: "Compression ratio" },
+];
+
+export const comparisonLinks: SiteLink[] = [
+  { href: "/compare/jpg-vs-png", label: "JPG vs PNG" },
+  { href: "/compare/jpg-vs-webp", label: "JPG vs WebP" },
+  { href: "/compare/png-vs-webp", label: "PNG vs WebP" },
+  { href: "/compare/jpeg-vs-jpg", label: "JPEG vs JPG" },
+  { href: "/compare/pdf-vs-image", label: "PDF vs image" },
+  { href: "/compare/image-resolution-vs-file-size", label: "Resolution vs file size" },
+  { href: "/compare/lossy-vs-lossless", label: "Lossy vs lossless" },
+  { href: "/compare/a4-vs-letter", label: "A4 vs Letter" },
+  { href: "/compare/vector-vs-raster", label: "Vector vs raster" },
+  { href: "/compare/online-tools-vs-desktop-apps", label: "Online tools vs desktop apps" },
+];
+
+/** Flat list of every indexable page path except the home page. */
+export const contentPaths: string[] = [
+  ...toolLinks.map((link) => link.href),
+  ...converterLinks.map((link) => link.href),
+  ...hubLinks.map((link) => link.href),
+  ...guideLinks.map((link) => link.href),
+  ...glossaryLinks.map((link) => link.href),
+  ...comparisonLinks.map((link) => link.href),
+  "/about",
+  "/privacy",
+];
+
+export const footerColumns: { heading: string; links: SiteLink[] }[] = [
+  {
+    heading: "Image tools",
+    links: [...toolLinks.slice(0, 5), ...converterLinks.slice(0, 4)],
+  },
+  {
+    heading: "Converters",
+    links: [...converterLinks.slice(4), ...toolLinks.slice(5)],
+  },
+  {
+    heading: "Learn",
+    links: [...hubLinks, ...guideLinks.slice(0, 8)],
+  },
+  {
+    heading: "Reference",
+    links: [
+      ...comparisonLinks.slice(0, 5),
+      ...glossaryLinks.slice(0, 6),
+      { href: "/guides", label: "All guides" },
+      { href: "/glossary", label: "All glossary terms" },
+      { href: "/compare", label: "All comparisons" },
+      { href: "/about", label: "About Filekind" },
+      { href: "/privacy", label: "Privacy" },
+    ],
+  },
+];

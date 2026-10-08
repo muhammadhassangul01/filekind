@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "icons": "node scripts/generate-icons.mjs",
     "deploy": "pnpm run site:deploy",
     "site:deploy": "pnpm --dir worker exec wrangler deploy --config ../wrangler.site.toml",
     "worker:dev": "pnpm --dir worker dev",
@@ -32,6 +33,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

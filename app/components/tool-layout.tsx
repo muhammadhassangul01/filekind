@@ -2,12 +2,83 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import JsonLd from "./json-ld";
+import SiteFooter from "./site-footer";
+import { breadcrumbSchema, type Crumb } from "@/lib/seo";
+
+export type NavKey =
+  | "home"
+  | "compressor"
+  | "resize"
+  | "converter"
+  | "images-pdf"
+  | "pdf-images"
+  | "guides"
+  | "glossary"
+  | "compare"
+  | "directory"
+  | "info";
+
+const navItems = [
+  { href: "/compress-image", label: "Compress image", key: "compressor" as const },
+  { href: "/resize-image", label: "Resize image", key: "resize" as const },
+  { href: "/convert-image", label: "Convert image", key: "converter" as const },
+  { href: "/images-to-pdf", label: "Images to PDF", key: "images-pdf" as const },
+  { href: "/pdf-to-images", label: "PDF to images", key: "pdf-images" as const },
+  { href: "/guides", label: "Guides", key: "guides" as const },
+];
+
+const homeCrumb: Crumb = { name: "Home", href: "/" };
+
+const defaultCrumbs: Partial<Record<NavKey, Crumb[]>> = {
+  compressor: [homeCrumb, { name: "Compress image" }],
+  resize: [homeCrumb, { name: "Resize image" }],
+  converter: [homeCrumb, { name: "Convert image" }],
+  "images-pdf": [homeCrumb, { name: "Images to PDF" }],
+  "pdf-images": [homeCrumb, { name: "PDF to images" }],
+  guides: [homeCrumb, { name: "Guides" }],
+  glossary: [homeCrumb, { name: "Glossary" }],
+  compare: [homeCrumb, { name: "Comparisons" }],
+  directory: [homeCrumb, { name: "Site directory" }],
+  info: [homeCrumb],
+};
+
+function Breadcrumbs({ items }: { items: Crumb[] }) {
+  if (items.length < 2) return null;
+  return (
+    <>
+      <JsonLd data={breadcrumbSchema(items)} />
+      <nav className="breadcrumbs" aria-label="Breadcrumb">
+        <ol>
+          {items.map((item, index) => {
+            const isLast = index === items.length - 1;
+            return (
+              <li key={`${item.name}-${index}`}>
+                {item.href && !isLast ? (
+                  <Link href={item.href}>{item.name}</Link>
+                ) : (
+                  <span aria-current="page">{item.name}</span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    </>
+  );
+}
 
 export default function ToolLayout({
   children,
   active,
-}: { children: React.ReactNode; active: "home" | "compressor" | "converter" | "images-pdf" | "pdf-images" }) {
+  breadcrumbs,
+}: {
+  children: React.ReactNode;
+  active: NavKey;
+  breadcrumbs?: Crumb[];
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const crumbs = breadcrumbs ?? defaultCrumbs[active] ?? [homeCrumb];
   useEffect(() => {
     if (!menuOpen) return;
     function closeOnEscape(event: KeyboardEvent) {
@@ -29,13 +100,18 @@ export default function ToolLayout({
         </button>
         {menuOpen && <button className="menu-backdrop" type="button" aria-label="Close navigation menu" onClick={() => setMenuOpen(false)} />}
         <nav className={`nav-links ${menuOpen ? "open" : ""}`} id="image-tools-nav" aria-label="Image tools">
-          <Link onClick={() => setMenuOpen(false)} href="/compress-image" aria-current={active === "compressor" ? "page" : undefined}>Compress image</Link>
-          <Link onClick={() => setMenuOpen(false)} href="/convert-image" aria-current={active === "converter" ? "page" : undefined}>Convert image</Link>
-          <Link onClick={() => setMenuOpen(false)} href="/images-to-pdf" aria-current={active === "images-pdf" ? "page" : undefined}>Images to PDF</Link>
-          <Link onClick={() => setMenuOpen(false)} href="/pdf-to-images" aria-current={active === "pdf-images" ? "page" : undefined}>PDF to images</Link>
+          {navItems.map((item) => (
+            <Link key={item.href} onClick={() => setMenuOpen(false)} href={item.href} aria-current={active === item.key ? "page" : undefined}>
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </header>
-      <main className="page">{children}</main>
+      <main className="page">
+        <Breadcrumbs items={crumbs} />
+        {children}
+      </main>
+      <SiteFooter />
     </>
   );
 }
@@ -61,8 +137,4 @@ export function FileDrop({ accept, onFile, busy, inputId }: { accept: string; on
       <input className="file-input" id={inputId} type="file" accept={accept} onChange={handleChange} disabled={busy} />
     </label>
   );
-}
-
-export function PageFooter() {
-  return <footer className="footer">Files stay in your browser. Filekind collects limited anonymous page-view analytics to understand which tools are useful.</footer>;
 }

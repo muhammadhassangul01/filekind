@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import ToolLayout, { FileDrop, PageFooter } from "./tool-layout";
-import { CompressSeoContent } from "./seo-content";
+import ToolLayout, { FileDrop } from "./tool-layout";
+import { CompressSeoContent, compressPanelFaq } from "./seo-content";
+import { ToolFaq, compressFaqs, compressHowTo } from "./tool-faqs";
 import { compressToTarget, formatBytes, formatDimensions, releaseImage, validateInput, decodeImage, type CompressionMetrics, type ImageInfo } from "./image-utils";
 
 type Result = { blob: Blob; url: string; width: number; height: number };
@@ -172,6 +173,6 @@ export default function ImageCompressor() {
       </section>
     </div>
     <div className="support-strip"><span><strong>Private</strong> Files stay in your browser.</span><span><strong>Limits</strong> Up to 25 MB, 16,000 px per side, and 48 MP.</span></div>
-    <CompressSeoContent /><p className="info-panel preset-link">Start with a <Link href="/compress-image?targetKB=200">200 KB target</Link>; the preset changes the starting value on this page and is not a separate tool.</p><PageFooter />
+    <CompressSeoContent /><p className="info-panel preset-link">Start with a <Link href="/compress-image?targetKB=200">200 KB target</Link>; the preset changes the starting value on this page and is not a separate tool.</p><ToolFaq faqs={compressFaqs} howTo={compressHowTo} extraFaqs={[compressPanelFaq]} />
   </ToolLayout>;
 }

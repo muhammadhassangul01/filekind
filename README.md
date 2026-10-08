@@ -47,6 +47,19 @@ The canonical origin is `https://filekind.tech`. Keep the custom domain on HTTPS
 
 Keep preview deployments out of search with the hosting provider's preview access controls or a preview-specific build configuration that emits `X-Robots-Tag: noindex, nofollow`. Robots rules are discovery guidance, not access protection. After launch, verify HTTPS redirects and the canonical hostname, complete Search Console verification, and submit the production `/sitemap.xml` URL.
 
+### SEO architecture
+
+Every page is built from shared pieces so metadata and structured data stay consistent:
+
+- `lib/seo.ts` exports `pageMetadata()` (title, description, keywords, canonical, robots, Open Graph, Twitter) and the JSON-LD helpers (`organizationSchema`, `websiteSchema`, `softwareAppSchema`, `breadcrumbSchema`, `faqSchema`, `howToSchema`, `articleSchema`, `definedTermSchema`, `itemListSchema`, `webpageSchema`). Page titles must not include `| Filekind`; the root layout applies that template.
+- `app/layout.tsx` emits the site-wide Organization, WebSite, and SoftwareApplication JSON-LD, the Open Graph image, icons, manifest, and optional search verification tags (`NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, `NEXT_PUBLIC_BING_VERIFICATION`, `NEXT_PUBLIC_YANDEX_VERIFICATION`).
+- `app/components/tool-layout.tsx` wraps every page with the header navigation, visible breadcrumbs plus a `BreadcrumbList` schema, and the mega footer.
+- Content lives in `lib/content/`: 32 guides (`guides-a.ts`, `guides-b.ts`), 50 glossary terms (`glossary.ts`), and 10 comparisons (`comparisons.ts`), all combined in `index.ts`. Cross-links and the footer must use the exact hrefs in `lib/content/links.ts`.
+- Pages: 10 tools, 6 converter routes, hubs (`/image-tools`, `/pdf-tools`, `/guides`, `/glossary`, `/compare`, `/directory`), 32 `/guides/[slug]`, 50 `/glossary/[slug]`, 10 `/compare/[slug]`, plus `/about` and `/privacy`. `app/sitemap.ts` and `app/feed.xml` are generated from that same content, so a new guide or glossary term appears in the sitemap and RSS feed automatically once it is exported from `lib/content`.
+- `public/llms.txt` describes the site for AI crawlers. Regenerate the PNG icons from `public/favicon.svg` with `pnpm icons` (requires the `sharp` dev dependency).
+
+After a content change, run `pnpm exec tsc --noEmit`, `pnpm lint`, and `pnpm build`, then spot-check `out/sitemap.xml` and a couple of `out/**/*.html` files for canonicals, JSON-LD, breadcrumbs, and footer links.
+
 ## Analytics and admin
 
 The static Pages app serves `/admin` like the other pages. It uses the simple credentials `admin` and `123_AbC#`, then reads aggregate data from the Worker at `/data`. This is intentionally not secure: the credentials and dashboard are public in the browser bundle.

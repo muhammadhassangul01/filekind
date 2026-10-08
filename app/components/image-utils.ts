@@ -215,6 +215,50 @@ export async function convertImage(file: File, outputFormat: ImageFormat, signal
   }
 }
 
+export type ResizeOptions = { width: number; height: number; format: "jpg" | "png"; quality: number };
+
+export async function resizeImage(file: File, options: ResizeOptions, signal?: AbortSignal): Promise<{ blob: Blob; width: number; height: number }> {
+  const info = await decodeImage(file);
+  try {
+    if (signal?.aborted) throw new DOMException("Resize cancelled", "AbortError");
+    if (!Number.isFinite(options.width) || !Number.isFinite(options.height) || options.width < 1 || options.height < 1) {
+      throw new Error("Width and height must be at least 1 pixel.");
+    }
+    if (options.width > MAX_DIMENSION || options.height > MAX_DIMENSION) {
+      throw new Error(`Output sides are limited to ${MAX_DIMENSION.toLocaleString()} pixels. Choose a smaller size.`);
+    }
+    if (options.width * options.height > MAX_PIXELS) {
+      throw new Error(`Output is limited to ${MAX_PIXELS / 1_000_000} megapixels. Choose a smaller size.`);
+    }
+    const source = await orientedSource(file, info.url);
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = options.width;
+      canvas.height = options.height;
+      const context = canvas.getContext("2d");
+      if (!context) throw new Error("Your browser could not prepare this image.");
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "high";
+      if (options.format === "jpg") {
+        context.fillStyle = "#fff";
+        context.fillRect(0, 0, options.width, options.height);
+      }
+      context.drawImage(source, 0, 0, options.width, options.height);
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, imageMimeTypes[options.format], options.format === "jpg" ? options.quality / 100 : undefined),
+      );
+      if (!blob || blob.type !== imageMimeTypes[options.format]) {
+        throw new Error(`Your browser could not create a ${formatLabel(options.format)} file.`);
+      }
+      return { blob, width: options.width, height: options.height };
+    } finally {
+      closeSource(source);
+    }
+  } finally {
+    URL.revokeObjectURL(info.url);
+  }
+}
+
 export async function jpegToPng(file: File, signal?: AbortSignal): Promise<{ blob: Blob; width: number; height: number }> {
   const info = await decodeImage(file);
   try {
