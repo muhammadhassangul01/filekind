@@ -13,6 +13,7 @@ export type NavKey =
   | "converter"
   | "images-pdf"
   | "pdf-images"
+  | "pdf-tools"
   | "merge-pdf"
   | "split-pdf"
   | "compress-pdf"
@@ -24,12 +25,13 @@ export type NavKey =
   | "info";
 
 const navItems = [
-  { href: "/compress-image", label: "Compress image", key: "compressor" as const },
-  { href: "/resize-image", label: "Resize image", key: "resize" as const },
-  { href: "/convert-image", label: "Convert image", key: "converter" as const },
-  { href: "/images-to-pdf", label: "Images to PDF", key: "images-pdf" as const },
-  { href: "/pdf-to-images", label: "PDF to images", key: "pdf-images" as const },
-  { href: "/guides", label: "Guides", key: "guides" as const },
+  { href: "/compress-image", label: "Compress image", key: "compressor" as const, match: ["compressor"] },
+  { href: "/resize-image", label: "Resize image", key: "resize" as const, match: ["resize"] },
+  { href: "/convert-image", label: "Convert image", key: "converter" as const, match: ["converter"] },
+  { href: "/images-to-pdf", label: "Images to PDF", key: "images-pdf" as const, match: ["images-pdf"] },
+  { href: "/pdf-to-images", label: "PDF to images", key: "pdf-images" as const, match: ["pdf-images"] },
+  { href: "/pdf-tools", label: "PDF tools", key: "pdf-tools" as const, match: ["pdf-tools", "merge-pdf", "split-pdf", "compress-pdf", "rotate-pdf"] },
+  { href: "/guides", label: "Guides", key: "guides" as const, match: ["guides"] },
 ];
 
 const homeCrumb: Crumb = { name: "Home", href: "/" };
@@ -40,6 +42,7 @@ const defaultCrumbs: Partial<Record<NavKey, Crumb[]>> = {
   converter: [homeCrumb, { name: "Convert image" }],
   "images-pdf": [homeCrumb, { name: "Images to PDF" }],
   "pdf-images": [homeCrumb, { name: "PDF to images" }],
+  "pdf-tools": [homeCrumb, { name: "PDF tools" }],
   "merge-pdf": [homeCrumb, { name: "PDF tools", href: "/pdf-tools" }, { name: "Merge PDF" }],
   "split-pdf": [homeCrumb, { name: "PDF tools", href: "/pdf-tools" }, { name: "Split PDF" }],
   "compress-pdf": [homeCrumb, { name: "PDF tools", href: "/pdf-tools" }, { name: "Compress PDF" }],
@@ -109,7 +112,7 @@ export default function ToolLayout({
         {menuOpen && <button className="menu-backdrop" type="button" aria-label="Close navigation menu" onClick={() => setMenuOpen(false)} />}
         <nav className={`nav-links ${menuOpen ? "open" : ""}`} id="image-tools-nav" aria-label="Image tools">
           {navItems.map((item) => (
-            <Link key={item.href} onClick={() => setMenuOpen(false)} href={item.href} aria-current={active === item.key ? "page" : undefined}>
+            <Link key={item.href} onClick={() => setMenuOpen(false)} href={item.href} aria-current={item.match.includes(active) ? "page" : undefined}>
               {item.label}
             </Link>
           ))}

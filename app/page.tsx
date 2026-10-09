@@ -152,7 +152,7 @@ export default function Home() {
               <span>{toolSummaries[link.href] ?? "Runs in your browser with no upload."}</span>
             </span>
             <span className="home-tool-arrow" aria-hidden="true">
-              -&gt;
+              →
             </span>
           </Link>
         ))}

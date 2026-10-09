@@ -90,7 +90,7 @@ export default function ImageToolsHubPage() {
                 <strong>{tool.title}</strong>
                 <span>{tool.description}</span>
               </span>
-              <span className="home-tool-arrow" aria-hidden="true">-&gt;</span>
+              <span className="home-tool-arrow" aria-hidden="true">→</span>
             </Link>
           ))}
         </div>

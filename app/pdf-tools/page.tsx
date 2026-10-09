@@ -75,7 +75,7 @@ export default function PdfToolsHubPage() {
   ];
 
   return (
-    <ToolLayout active="info" breadcrumbs={[{ name: "Home", href: "/" }, { name: "PDF tools" }]}>
+    <ToolLayout active="pdf-tools" breadcrumbs={[{ name: "Home", href: "/" }, { name: "PDF tools" }]}>
       <JsonLd data={schema} />
       <section className="intro">
         <p className="eyebrow">Toolkit</p>
@@ -96,7 +96,7 @@ export default function PdfToolsHubPage() {
                 <strong>{link.label}</strong>
                 <span>{pdfToolNotes[link.href] ?? "Runs in your browser with no upload."}</span>
               </span>
-              <span className="home-tool-arrow" aria-hidden="true">-&gt;</span>
+              <span className="home-tool-arrow" aria-hidden="true">→</span>
             </Link>
           ))}
         </div>

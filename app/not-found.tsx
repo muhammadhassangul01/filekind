@@ -25,7 +25,7 @@ export default function NotFound() {
               <span>Free, private, and no signup.</span>
             </span>
             <span className="home-tool-arrow" aria-hidden="true">
-              -&gt;
+              →
             </span>
           </Link>
         ))}
