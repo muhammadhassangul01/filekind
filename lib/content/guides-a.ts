@@ -1696,7 +1696,7 @@ export const guidesA: Guide[] = [
           "If you need a PDF made from images, or pages turned back into images, those live with the PDF tools rather than the image converter.",
         ],
         list: [
-          "HEIC, GIF, BMP, TIFF, SVG, and AVIF inputs are not supported.",
+          "Converter inputs: HEIC, GIF, BMP, TIFF, SVG, and AVIF are not accepted.",
           "PDF files are handled by the PDF tools, such as PDF to JPG or PDF to PNG, not by the image converter.",
           "Batch conversion is not supported; process files one at a time.",
         ],
@@ -1720,7 +1720,7 @@ export const guidesA: Guide[] = [
       {
         question: "Can I change a HEIC image to JPG here?",
         answer:
-          "No. HEIC is not supported. Export the photo as JPEG on your iPhone or Android device first, then convert it here if needed.",
+          "Not as an image. The converter takes JPEG, PNG, and static WebP, so export the photo as JPEG on your iPhone or Android device first. Images to PDF does open HEIC files, but it places them on a page instead of producing a JPEG.",
       },
       {
         question: "Will renaming the file extension change the format?",
@@ -1800,7 +1800,7 @@ export const guidesA: Guide[] = [
         heading: "Set the camera to JPEG once",
         paragraphs: [
           "If you want every new photo to be JPEG, open Settings, then Camera, then Formats, and choose Most Compatible. New shots will be saved as JPEG. Existing HEIC photos stay as they are.",
-          "For one-off conversions of HEIC files, export them through the Files app or share sheet to JPEG first. This site does not convert HEIC directly.",
+          "For a standalone JPEG from a HEIC file, export it through the Files app or share sheet first. The image converter itself takes JPEG, PNG, and WebP; HEIC photos open directly only in Images to PDF, which outputs a document rather than an image.",
           "The same Settings screen is worth checking on an iPad if you take photos there. The option applies per device, so tablets keep their own default.",
         ],
         links: [{ href: "/glossary/heic", label: "HEIC" }],
@@ -1847,7 +1847,7 @@ export const guidesA: Guide[] = [
       {
         question: "Can Filekind convert my HEIC photos?",
         answer:
-          "Not directly. HEIC is not supported. Set the camera to Most Compatible for new photos, or export existing HEIC files as JPEG from the Files app, then convert here if you need PNG or WebP.",
+          "The converter does not take HEIC, so set the camera to Most Compatible for new photos, or export existing HEIC files as JPEG from the Files app, then convert here if you need PNG or WebP. To put a HEIC photo straight into a document, open Images to PDF, which decodes it for you.",
       },
       {
         question: "Does my photo leave my iPhone during conversion?",

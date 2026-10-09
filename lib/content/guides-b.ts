@@ -44,7 +44,7 @@ export const guidesB: Guide[] = [
       {
         heading: "HEIC photos need one extra step",
         paragraphs: [
-          "Many Android phones shoot HEIC instead of JPEG. Filekind accepts JPEG, PNG, and static WebP, but it does not convert HEIC, GIF, BMP, TIFF, SVG, or AVIF files, so a HEIC photo is refused before the conversion begins.",
+          "Many Android phones shoot HEIC instead of JPEG. The converter accepts JPEG, PNG, and static WebP, and it refuses HEIC, GIF, BMP, TIFF, SVG, or AVIF files before the conversion begins. The one exception elsewhere on the site is Images to PDF, which opens a HEIC photo and builds the page from it.",
           "Open your camera settings and set the save format to JPEG, then reopen the photo. Your Files app shows the extension: jpg means the file is ready to convert, and heic means you still need to change the format. Some gallery apps also offer a Save as JPG or Export option that does the same job.",
         ],
         links: [{ href: "/glossary/heic", label: "HEIC files" }],
@@ -81,7 +81,7 @@ export const guidesB: Guide[] = [
       },
       {
         question: "Why will my HEIC photo not convert?",
-        answer: "Filekind accepts JPEG, PNG, and static WebP only. Change your camera save format to JPEG, or export the photo as JPG from your gallery app, then run the conversion again.",
+        answer: "The converter takes JPEG, PNG, and static WebP only. Change your camera save format to JPEG, or export the photo as JPG from your gallery app, then run the conversion again. To put the HEIC photo itself into a document, use Images to PDF, which decodes it in the browser.",
       },
     ],
   },
@@ -143,10 +143,13 @@ export const guidesB: Guide[] = [
       {
         heading: "What this tool does not do",
         paragraphs: [
-          "The result contains the images themselves, not selectable text. There is no OCR, so a photo of a printed page becomes a picture of that page rather than searchable text, and there is no PDF editing, page deletion, or PDF compression after the fact.",
-          "If the file turns out too heavy for an upload form, compress the source photos first and build the PDF again. Smaller images produce a smaller document, and the source pictures can be reduced to a custom limit before you start.",
+          "The result contains the images themselves, not selectable text. There is no OCR, so a photo of a printed page becomes a picture of that page rather than searchable text, and the content of a page cannot be edited here. Pages can be merged, split out, rotated, and compressed afterwards, but the text and artwork inside a page stay as they are.",
+          "If the file turns out too heavy for an upload form, compress the source photos first and build the PDF again, or run the file through Compress PDF once it exists. Smaller images produce a smaller document, and the source pictures can be reduced to a custom limit before you start.",
         ],
-        links: [{ href: "/compress-image", label: "Compress image" }],
+        links: [
+          { href: "/compress-image", label: "Compress image" },
+          { href: "/compress-pdf", label: "Compress PDF" },
+        ],
       },
     ],
     steps: [
@@ -826,8 +829,8 @@ export const guidesB: Guide[] = [
       {
         heading: "Select the photos, and check the format first",
         paragraphs: [
-          "Tap the picker and choose several pictures at once. JPEG, PNG, and static WebP files up to 25 MB each are accepted, and each one you select appears as a numbered thumbnail ready to become a page.",
-          "iPhones save photos as HEIC by default, and many Android phones do the same. Those files are rejected, so change your camera format to Most Compatible or JPEG, or export the pictures as JPEG from your gallery, before you start.",
+          "Tap the picker and choose several pictures at once. JPEG, PNG, static WebP, and HEIC files up to 25 MB each are accepted, and each one you select appears as a numbered thumbnail ready to become a page.",
+          "iPhones save photos as HEIC by default, and many Android phones do the same. The page decodes those files in the browser as it adds them, so there is no export step: choose the photos as they are and they become pages.",
         ],
         links: [{ href: "/glossary/heic", label: "HEIC files" }],
       },
@@ -868,7 +871,7 @@ export const guidesB: Guide[] = [
       },
       {
         question: "Why won't my iPhone photos add to the PDF?",
-        answer: "They are probably saved as HEIC, which the tool does not accept. Switch your camera format to Most Compatible, or export the photos as JPEG, and they will load normally.",
+        answer: "HEIC files are accepted and converted on the spot, so size is the usual cause: each photo may be at most 25 MB. Remove the largest ones, or export a smaller JPEG copy from your gallery and add that instead.",
       },
       {
         question: "How many photos can I put in one PDF on a phone?",
@@ -1191,9 +1194,12 @@ export const guidesB: Guide[] = [
         heading: "What will not make a file smaller",
         paragraphs: [
           "Renaming the file or changing the letters after the dot changes nothing, because the image data inside is untouched. The same is true of copying it to a cloud folder or attaching it to a message: the bytes travel as they are.",
-          "There is no PDF compression here either, so a heavy document needs smaller source images before it is rebuilt. Reduce the pictures, then generate the document again from the lighter versions.",
+          "This tool shrinks images, not documents. To make an existing PDF lighter, run it through Compress PDF; to keep a photo PDF light from the start, reduce the pictures, then generate the document again from the lighter versions.",
         ],
-        links: [{ href: "/glossary/file-extension", label: "File extensions" }],
+        links: [
+          { href: "/glossary/file-extension", label: "File extensions" },
+          { href: "/compress-pdf", label: "Compress PDF" },
+        ],
       },
     ],
     faqs: [

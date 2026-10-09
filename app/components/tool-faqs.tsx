@@ -127,7 +127,7 @@ export const imagesToPdfFaqs: Faq[] = [
   {
     question: "Does this add searchable text or OCR?",
     answer:
-      "No. The tool creates pages from images only. It does not run OCR, add a text layer, edit existing PDFs, or compress an existing PDF.",
+      "No. The tool creates pages from images only, so there is no OCR and no text layer. Page content is never edited here; joining, splitting, rotating, and shrinking an existing document each have their own tool.",
   },
   {
     question: "How large can my images be?",
@@ -239,6 +239,166 @@ export const resizeHowTo = {
       name: "Generate and download",
       text: "Compare the new dimensions and file size with the original, then download the resized image.",
     },
+  ] satisfies HowToStep[],
+};
+
+export const mergePdfFaqs: Faq[] = [
+  {
+    question: "How many PDFs can I merge at once?",
+    answer:
+      "Up to 20 files in one run, each up to 50 MB, with a combined total of 100 pages in the finished document. If the result would be larger, remove a file or split it first.",
+  },
+  {
+    question: "Does merging reduce the quality of the pages?",
+    answer:
+      "No. Pages are copied from the source files into a new document rather than printed again, so text, links, fonts, and images arrive exactly as they were.",
+  },
+  {
+    question: "Can I change the order of the files?",
+    answer:
+      "Yes. Drag any file up or down the list before merging, or use the handle with the arrow keys. The order you see is the order of the pages in the result.",
+  },
+  {
+    question: "Are my documents uploaded?",
+    answer:
+      "No. Each file is read and combined on your device with JavaScript. Nothing is sent to a server, and no copy is kept after you close the tab.",
+  },
+  {
+    question: "What happens to password-protected PDFs?",
+    answer:
+      "They are rejected with a clear message. Remove the password in your PDF app first, then merge the unlocked copies.",
+  },
+];
+
+export const mergePdfHowTo = {
+  name: "How to merge PDF files",
+  description: "Choose the PDFs, drag them into order, and combine them into one document in your browser.",
+  path: "/merge-pdf",
+  steps: [
+    { name: "Choose your PDFs", text: "Select up to 20 PDF files, each up to 50 MB, from your device." },
+    { name: "Arrange the order", text: "Drag the files into the sequence you want, with the first pages at the top." },
+    { name: "Merge the documents", text: "Select Merge PDFs to combine everything into a single file in your browser." },
+    { name: "Download the result", text: "Check the page count and size, then save the merged PDF to your device." },
+  ] satisfies HowToStep[],
+};
+
+export const splitPdfFaqs: Faq[] = [
+  {
+    question: "How do I keep only certain pages?",
+    answer:
+      "Click pages in the preview to select or clear them, or type a range such as 1-3, 5, 8-10 and press Apply. The saved file contains the selected pages in their original order.",
+  },
+  {
+    question: "Can I save every page as its own PDF?",
+    answer:
+      "Yes. Choose the one-PDF-per-page option and the tool returns a ZIP of single-page files, each named after its page number.",
+  },
+  {
+    question: "Does splitting change the page content?",
+    answer:
+      "No. Pages are copied out of the source document, so fonts, links, images, and text stay exactly as they were. Nothing is re-rendered or re-compressed.",
+  },
+  {
+    question: "What are the limits?",
+    answer:
+      "PDFs up to 50 MB and 100 pages. Thumbnails are rendered locally so you can see each page before choosing it.",
+  },
+  {
+    question: "Can it open a password-protected PDF?",
+    answer:
+      "No. Password-protected and corrupt files are rejected with a clear message. Remove the password first, then split the unlocked file.",
+  },
+];
+
+export const splitPdfHowTo = {
+  name: "How to split a PDF",
+  description: "Open a PDF, choose the pages you need by preview or range, and save them as one PDF or as single-page files.",
+  path: "/split-pdf",
+  steps: [
+    { name: "Choose a PDF", text: "Select a PDF up to 50 MB and 100 pages. Page previews render on your device." },
+    { name: "Pick the pages", text: "Click pages individually, or enter a range such as 2-4, 7 and apply it." },
+    { name: "Choose how to save", text: "Keep the selection as one PDF, or save each page as a separate file in a ZIP." },
+    { name: "Download", text: "Generate the split and save the result to your device." },
+  ] satisfies HowToStep[],
+};
+
+export const compressPdfFaqs: Faq[] = [
+  {
+    question: "What do the three compression levels change?",
+    answer:
+      "Light re-encodes embedded photos gently, Medium drops their quality further, and Strong rebuilds them at a smaller size as well as a lower quality. The level you pick decides how much detail the pictures keep.",
+  },
+  {
+    question: "Will the text still be selectable after compressing?",
+    answer:
+      "Yes. Only the images inside the PDF are rebuilt. Text, links, fonts, and page order are untouched, so copy and search keep working in the smaller file.",
+  },
+  {
+    question: "How much smaller can my PDF get?",
+    answer:
+      "It depends on what is inside. Scanned pages and photo-heavy documents shrink the most, while text-only PDFs are usually already small. The result screen shows the before and after sizes so you can decide.",
+  },
+  {
+    question: "Why did my PDF barely shrink?",
+    answer:
+      "Files with little or no embedded image data have almost nothing this tool can rebuild. Vector drawings, fonts, and text streams are already compact, so the tool reports that the file is already as small as it can make it.",
+  },
+  {
+    question: "Is the document uploaded?",
+    answer:
+      "No. The PDF is opened, re-encoded, and saved on your device. Nothing is sent to a server, and the tab does not keep a copy.",
+  },
+];
+
+export const compressPdfHowTo = {
+  name: "How to compress a PDF",
+  description: "Choose a PDF, pick a compression level, and download a smaller document with its text still selectable.",
+  path: "/compress-pdf",
+  steps: [
+    { name: "Choose a PDF", text: "Select a PDF up to 50 MB and 100 pages from your device." },
+    { name: "Pick a level", text: "Start with Medium, or choose Light for closest to the original and Strong for the biggest saving." },
+    { name: "Compress", text: "The tool rebuilds the embedded images in your browser and keeps the text streams untouched." },
+    { name: "Compare and download", text: "Check the before and after sizes, then download the smaller PDF." },
+  ] satisfies HowToStep[],
+};
+
+export const rotatePdfFaqs: Faq[] = [
+  {
+    question: "How do I rotate one page or every page?",
+    answer:
+      "Use the Left and Right buttons under a page to turn just that page, or Rotate all left and Rotate all right to turn the whole document. The angle shown on each preview is applied when you save.",
+  },
+  {
+    question: "Does rotating change the image quality?",
+    answer:
+      "No. Only the page display angle is stored, so the content streams are copied as they are. The result looks identical to the original, just turned.",
+  },
+  {
+    question: "Does it fix pages that were already sideways?",
+    answer:
+      "Yes. The angle already set in the source file is kept and yours is added to it, so a page that opens at 90 degrees can be turned back to upright with one click.",
+  },
+  {
+    question: "What are the limits?",
+    answer:
+      "PDFs up to 50 MB and 100 pages. Password-protected files are rejected, so remove the password in your PDF app first.",
+  },
+  {
+    question: "Is my PDF uploaded?",
+    answer:
+      "No. Page previews render with pdf.js and the new file is written on your device. The document never leaves your browser.",
+  },
+];
+
+export const rotatePdfHowTo = {
+  name: "How to rotate PDF pages",
+  description: "Open a PDF, turn single pages or the whole document left or right, and save a new file with the original quality.",
+  path: "/rotate-pdf",
+  steps: [
+    { name: "Choose a PDF", text: "Select a PDF up to 50 MB and 100 pages. Previews are rendered on your device." },
+    { name: "Turn the pages", text: "Rotate individual pages, or use the rotate all buttons for a document that opens sideways." },
+    { name: "Save the file", text: "Select Save rotated PDF to write the new angles into a fresh document." },
+    { name: "Download", text: "Save the rotated PDF to your device and check it in your PDF reader." },
   ] satisfies HowToStep[],
 };
 

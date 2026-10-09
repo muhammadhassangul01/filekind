@@ -5,7 +5,7 @@ import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalList
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useRef, useState } from "react";
 import ToolLayout from "./tool-layout";
-import { decodeImage, formatBytes, isAnimatedWebP, releaseImage, validateInput, type ImageInfo } from "./image-utils";
+import { decodeImage, formatBytes, isAnimatedWebP, MAX_INPUT_BYTES, releaseImage, validateInput, type ImageInfo } from "./image-utils";
 import { ToolFaq, imagesToPdfFaqs, imagesToPdfHowTo } from "./tool-faqs";
 import type { Faq } from "@/lib/content/types";
 import type { Crumb } from "@/lib/seo";
@@ -25,7 +25,7 @@ type SelectedImage = { id: string; file: File; info: ImageInfo };
 type PageSize = "fit" | "a4" | "letter";
 type Settings = { pageSize: PageSize; marginMode: "none" | "custom"; marginMm: number; orientation: "auto" | "portrait" | "landscape" };
 type Result = { blob: Blob; url: string; pages: number; previewUrl: string; previewRatio: number };
-const accepted = ["image/jpeg", "image/png", "image/webp"];
+const accepted = ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
 const defaultSettings: Settings = { pageSize: "fit", marginMode: "none", marginMm: 0, orientation: "auto" };
 const PDF_CONTENT_WIDTH = 595.28;
 const PDF_DIMENSION_LIMIT = 14400;
@@ -78,6 +78,49 @@ function assertPageGeometry(pdf: InstanceType<typeof import("jspdf").jsPDF>, exp
   if (Math.abs(actualWidth - expectedWidth) > PDF_DIMENSION_TOLERANCE || Math.abs(actualHeight - expectedHeight) > PDF_DIMENSION_TOLERANCE) throw new Error("The PDF page size could not be created as requested. Try a less extreme image shape.");
 }
 
+const HEIC_EXTENSIONS = /\.(heic|heif)$/i;
+
+function isHeic(file: File): boolean {
+  return file.type === "image/heic" || file.type === "image/heif" || (!file.type && HEIC_EXTENSIONS.test(file.name));
+}
+
+async function heicToJpeg(file: File): Promise<File> {
+  const [{ default: libheif }, buffer] = await Promise.all([import("libheif-js/wasm-bundle"), file.arrayBuffer()]);
+  const decoder = new libheif.HeifDecoder();
+  const images = decoder.decode(new Uint8Array(buffer));
+  if (!images.length) throw new Error("No image was found inside this HEIC file.");
+  const image = images[0];
+  try {
+    const width = image.get_width();
+    const height = image.get_height();
+    if (!width || !height) throw new Error("This HEIC file has no usable dimensions.");
+    const decoded = document.createElement("canvas");
+    decoded.width = width;
+    decoded.height = height;
+    const decodedContext = decoded.getContext("2d");
+    if (!decodedContext) throw new Error("Your browser could not prepare this image.");
+    const imageData = decodedContext.createImageData(width, height);
+    await new Promise<void>((resolve, reject) => {
+      image.display(imageData, (result) => (result ? resolve() : reject(new Error("This HEIC image could not be decoded."))));
+    });
+    decodedContext.putImageData(imageData, 0, 0);
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("Your browser could not prepare this image.");
+    context.fillStyle = "#fff";
+    context.fillRect(0, 0, width, height);
+    context.drawImage(decoded, 0, 0);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.92));
+    if (!blob) throw new Error("This HEIC image could not be converted.");
+    const name = HEIC_EXTENSIONS.test(file.name) ? file.name.replace(HEIC_EXTENSIONS, ".jpg") : `${file.name}.jpg`;
+    return new File([blob], name, { type: "image/jpeg", lastModified: file.lastModified });
+  } finally {
+    if (typeof image.free === "function") image.free();
+  }
+}
+
 function moveItem(items: SelectedImage[], activeId: string, overId: string): SelectedImage[] {
   const oldIndex = items.findIndex((item) => item.id === activeId); const newIndex = items.findIndex((item) => item.id === overId);
   if (oldIndex < 0 || newIndex < 0 || oldIndex === newIndex) return items;
@@ -104,7 +147,7 @@ function SortableImageRow({ item, index, onRemove, disabled, activeId, overId }:
 export default function ImagesToPdf({ variant, seo, panelFaq }: ImagesToPdfProps) {
   const acceptTypes = variant?.accept ?? accepted;
   const acceptAttr = acceptTypes.join(",");
-  const inputLabel = variant?.inputLabel ?? "JPEG, PNG, or static WebP, up to 25 MB each";
+  const inputLabel = variant?.inputLabel ?? "JPEG, PNG, static WebP, or HEIC, up to 25 MB each";
   const [items, setItems] = useState<SelectedImage[]>([]); const [settings, setSettings] = useState<Settings>(defaultSettings); const [result, setResult] = useState<Result | null>(null);
   const [busy, setBusy] = useState(false); const [activeId, setActiveId] = useState<string | null>(null); const [overId, setOverId] = useState<string | null>(null); const [status, setStatus] = useState(""); const [error, setError] = useState("");
   const itemsRef = useRef(items); const resultRef = useRef<Result | null>(null); const abortRef = useRef<AbortController | null>(null); const headingRef = useRef<HTMLHeadingElement | null>(null);
@@ -118,7 +161,19 @@ export default function ImagesToPdf({ variant, seo, panelFaq }: ImagesToPdfProps
   function changeSettings(patch: Partial<Settings>) { setSettings((current) => ({ ...current, ...patch })); clearResult(); }
   async function addFiles(files: File[]) {
     setError(""); setStatus(""); clearResult(); const additions: SelectedImage[] = [];
-    for (const file of files) { const validationError = validateInput(file, acceptTypes); if (validationError) { setError(`${file.name}: ${validationError}`); continue; } if (await isAnimatedWebP(file)) { setError(`${file.name}: animated WebP files are not supported.`); continue; } try { additions.push({ id: crypto.randomUUID(), file, info: await decodeImage(file) }); } catch (decodeError) { setError(`${file.name}: ${decodeError instanceof Error ? decodeError.message : "This image could not be decoded."}`); } }
+    for (const file of files) {
+      let candidate = file;
+      if (isHeic(file) && acceptTypes.some((type) => type === "image/heic" || type === "image/heif")) {
+        if (file.size > MAX_INPUT_BYTES) { setError(`${file.name}: This file is larger than the 25 MB supported limit.`); continue; }
+        setStatus("Converting HEIC photo...");
+        try { candidate = await heicToJpeg(file); } catch (conversionError) { setError(`${file.name}: ${conversionError instanceof Error ? conversionError.message : "This HEIC file could not be converted."}`); continue; }
+      }
+      const validationError = validateInput(candidate, acceptTypes, "JPEG, PNG, WebP, or HEIC");
+      if (validationError) { setError(`${file.name}: ${validationError}`); continue; }
+      if (await isAnimatedWebP(candidate)) { setError(`${file.name}: animated WebP files are not supported.`); continue; }
+      try { additions.push({ id: crypto.randomUUID(), file: candidate, info: await decodeImage(candidate) }); } catch (decodeError) { setError(`${file.name}: ${decodeError instanceof Error ? decodeError.message : "This image could not be decoded."}`); }
+    }
+    if (!additions.length) setStatus("");
     if (additions.length) { setItems((current) => [...current, ...additions]); setStatus(`${additions.length} image${additions.length === 1 ? "" : "s"} ready.`); }
   }
   function removeAt(id: string) { const removed = itemsRef.current.find((item) => item.id === id); if (removed) releaseImage(removed.info); setItems((current) => current.filter((item) => item.id !== id)); clearResult(); }

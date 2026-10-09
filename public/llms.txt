@@ -2,7 +2,7 @@
 
 > Free image and PDF tools that run entirely in the browser. Files are never uploaded: compression, resizing, conversion, and PDF assembly all happen on the user's device. No signup, no watermark.
 
-Filekind covers the everyday tasks that block uploads and forms: shrinking a photo to a KB limit, changing image dimensions, converting between common formats, building a PDF from pictures, and turning PDF pages back into images.
+Filekind covers the everyday tasks that block uploads and forms: shrinking a photo to a KB limit, changing image dimensions, converting between common formats, building a PDF from pictures, merging or splitting documents, shrinking an existing PDF, turning pages right side up, and turning PDF pages back into images.
 
 ## Tools
 
@@ -11,6 +11,10 @@ Filekind covers the everyday tasks that block uploads and forms: shrinking a pho
 - [Convert image](https://filekind.tech/convert-image): Convert between JPG, PNG, and static WebP in any direction.
 - [Images to PDF](https://filekind.tech/images-to-pdf): Arrange images into one PDF, with fit, A4, or Letter page sizes and margins.
 - [PDF to images](https://filekind.tech/pdf-to-images): Render each complete PDF page as a JPG or PNG, downloadable individually or as a ZIP.
+- [Merge PDF](https://filekind.tech/merge-pdf): Join up to 20 PDFs in a chosen order into one document.
+- [Split PDF](https://filekind.tech/split-pdf): Keep selected pages, or save each page of a document as its own PDF.
+- [Compress PDF](https://filekind.tech/compress-pdf): Shrink image-heavy PDFs in three levels, with text left selectable.
+- [Rotate PDF](https://filekind.tech/rotate-pdf): Turn selected pages or the whole document left or right and save.
 - [JPG to PDF](https://filekind.tech/jpg-to-pdf), [PNG to PDF](https://filekind.tech/png-to-pdf), [WebP to PDF](https://filekind.tech/webp-to-pdf): Single-format routes into the PDF builder.
 - [PDF to JPG](https://filekind.tech/pdf-to-jpg), [PDF to PNG](https://filekind.tech/pdf-to-png): Single-format routes out of the PDF renderer.
 
@@ -33,5 +37,5 @@ Filekind covers the everyday tasks that block uploads and forms: shrinking a pho
 ## Optional
 
 - Image input limits: 25 MB, 16,000 pixels per side, 48 megapixels. PDF input: 50 MB, 100 pages.
-- Supported image formats: JPEG, PNG, static WebP. Not supported: HEIC, GIF, BMP, TIFF, SVG, AVIF, animated WebP.
-- Filekind does not provide OCR, PDF editing, PDF compression, cropping, rotating, watermarking, or batch processing.
+- Supported image formats: JPEG, PNG, static WebP. Images to PDF also accepts HEIC and converts it in the browser. Not supported: GIF, BMP, TIFF, SVG, AVIF, animated WebP.
+- Filekind does not provide OCR, text or image editing inside a PDF, cropping, watermarking, or batch processing.

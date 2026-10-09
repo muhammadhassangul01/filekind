@@ -7,8 +7,10 @@ Minimal browser-only image tools built with Next.js, TypeScript, and Tailwind CS
 - `/` is the minimal tool chooser homepage. Legacy `/?targetKB=200` links forward to `/compress-image?targetKB=200`.
 - `/compress-image` compresses JPEG and PNG images to a custom maximum size.
 - `/convert-image` converts JPEG, PNG, and static WebP through one shared interface. Legacy converter URLs redirect to canonical presets.
-- `/images-to-pdf` arranges multiple images into a configurable PDF.
+- `/resize-image` resizes images to exact pixels or a percentage with an aspect-ratio lock.
+- `/images-to-pdf` arranges multiple images into a configurable PDF and also accepts HEIC photos, which are decoded with a lazily loaded `libheif-js` chunk.
 - `/pdf-to-images` renders complete PDF pages as numbered JPG or PNG files and downloads them as a ZIP.
+- `/merge-pdf`, `/split-pdf`, `/compress-pdf`, and `/rotate-pdf` run `pdf-lib` in the browser to join documents, extract pages, re-encode embedded images at three quality levels, and turn pages left or right.
 - Image and PDF contents stay on the device. If `NEXT_PUBLIC_ANALYTICS_ENDPOINT` is configured in a production Pages build, only normalized public page paths are sent for limited aggregate usage analytics; counts are approximate page views, not unique people.
 - Inputs are limited to 25 MB, 16,000 pixels per side, and 48 megapixels. The pixel ceiling keeps unusually large images bounded while supporting high-resolution photos such as 7,952 x 5,304 px.
 
@@ -55,7 +57,7 @@ Every page is built from shared pieces so metadata and structured data stay cons
 - `app/layout.tsx` emits the site-wide Organization, WebSite, and SoftwareApplication JSON-LD, the Open Graph image, icons, manifest, and optional search verification tags (`NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`, `NEXT_PUBLIC_BING_VERIFICATION`, `NEXT_PUBLIC_YANDEX_VERIFICATION`).
 - `app/components/tool-layout.tsx` wraps every page with the header navigation, visible breadcrumbs plus a `BreadcrumbList` schema, and the mega footer.
 - Content lives in `lib/content/`: 32 guides (`guides-a.ts`, `guides-b.ts`), 50 glossary terms (`glossary.ts`), and 10 comparisons (`comparisons.ts`), all combined in `index.ts`. Cross-links and the footer must use the exact hrefs in `lib/content/links.ts`.
-- Pages: 10 tools, 6 converter routes, hubs (`/image-tools`, `/pdf-tools`, `/guides`, `/glossary`, `/compare`, `/directory`), 32 `/guides/[slug]`, 50 `/glossary/[slug]`, 10 `/compare/[slug]`, plus `/about` and `/privacy`. `app/sitemap.ts` and `app/feed.xml` are generated from that same content, so a new guide or glossary term appears in the sitemap and RSS feed automatically once it is exported from `lib/content`.
+- Pages: 14 tools, 6 converter routes, hubs (`/image-tools`, `/pdf-tools`, `/guides`, `/glossary`, `/compare`, `/directory`), 32 `/guides/[slug]`, 50 `/glossary/[slug]`, 10 `/compare/[slug]`, plus `/about` and `/privacy`. `app/sitemap.ts` and `app/feed.xml` are generated from that same content, so a new guide or glossary term appears in the sitemap and RSS feed automatically once it is exported from `lib/content`.
 - `public/llms.txt` describes the site for AI crawlers. Regenerate the PNG icons from `public/favicon.svg` with `pnpm icons` (requires the `sharp` dev dependency).
 
 After a content change, run `pnpm exec tsc --noEmit`, `pnpm lint`, and `pnpm build`, then spot-check `out/sitemap.xml` and a couple of `out/**/*.html` files for canonicals, JSON-LD, breadcrumbs, and footer links.

@@ -13,6 +13,10 @@ export type NavKey =
   | "converter"
   | "images-pdf"
   | "pdf-images"
+  | "merge-pdf"
+  | "split-pdf"
+  | "compress-pdf"
+  | "rotate-pdf"
   | "guides"
   | "glossary"
   | "compare"
@@ -36,6 +40,10 @@ const defaultCrumbs: Partial<Record<NavKey, Crumb[]>> = {
   converter: [homeCrumb, { name: "Convert image" }],
   "images-pdf": [homeCrumb, { name: "Images to PDF" }],
   "pdf-images": [homeCrumb, { name: "PDF to images" }],
+  "merge-pdf": [homeCrumb, { name: "PDF tools", href: "/pdf-tools" }, { name: "Merge PDF" }],
+  "split-pdf": [homeCrumb, { name: "PDF tools", href: "/pdf-tools" }, { name: "Split PDF" }],
+  "compress-pdf": [homeCrumb, { name: "PDF tools", href: "/pdf-tools" }, { name: "Compress PDF" }],
+  "rotate-pdf": [homeCrumb, { name: "PDF tools", href: "/pdf-tools" }, { name: "Rotate PDF" }],
   guides: [homeCrumb, { name: "Guides" }],
   glossary: [homeCrumb, { name: "Glossary" }],
   compare: [homeCrumb, { name: "Comparisons" }],

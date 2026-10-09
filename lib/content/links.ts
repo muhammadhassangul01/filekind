@@ -9,6 +9,10 @@ export const toolLinks: SiteLink[] = [
   { href: "/convert-image", label: "Convert image" },
   { href: "/images-to-pdf", label: "Images to PDF" },
   { href: "/pdf-to-images", label: "PDF to images" },
+  { href: "/merge-pdf", label: "Merge PDF" },
+  { href: "/split-pdf", label: "Split PDF" },
+  { href: "/compress-pdf", label: "Compress PDF" },
+  { href: "/rotate-pdf", label: "Rotate PDF" },
   { href: "/jpg-to-pdf", label: "JPG to PDF" },
   { href: "/png-to-pdf", label: "PNG to PDF" },
   { href: "/webp-to-pdf", label: "WebP to PDF" },
@@ -147,14 +151,18 @@ export const contentPaths: string[] = [
   "/privacy",
 ];
 
+const imageToolHrefs = new Set(["/compress-image", "/resize-image", "/convert-image", "/images-to-pdf", "/pdf-to-images"]);
+const pdfEditHrefs = new Set(["/merge-pdf", "/split-pdf", "/compress-pdf", "/rotate-pdf"]);
+const pdfVariantHrefs = new Set(["/jpg-to-pdf", "/png-to-pdf", "/webp-to-pdf", "/pdf-to-jpg", "/pdf-to-png"]);
+
 export const footerColumns: { heading: string; links: SiteLink[] }[] = [
   {
     heading: "Image tools",
-    links: [...toolLinks.slice(0, 5), ...converterLinks.slice(0, 4)],
+    links: [...toolLinks.filter((link) => imageToolHrefs.has(link.href)), ...converterLinks],
   },
   {
-    heading: "Converters",
-    links: [...converterLinks.slice(4), ...toolLinks.slice(5)],
+    heading: "PDF tools",
+    links: [...toolLinks.filter((link) => pdfEditHrefs.has(link.href) || pdfVariantHrefs.has(link.href))],
   },
   {
     heading: "Learn",

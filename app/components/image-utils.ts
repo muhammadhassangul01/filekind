@@ -16,8 +16,8 @@ export function formatDimensions(width: number, height: number): string {
   return `${width.toLocaleString()} x ${height.toLocaleString()} px`;
 }
 
-export function validateInput(file: File, types: string[]): string | null {
-  if (!types.includes(file.type)) return "Choose a supported JPEG, PNG, or static WebP image file.";
+export function validateInput(file: File, types: string[], typeHint = "JPEG, PNG, or static WebP"): string | null {
+  if (!types.includes(file.type)) return `Choose a supported ${typeHint} image file.`;
   if (file.size > MAX_INPUT_BYTES) return "This file is larger than the 25 MB supported limit.";
   if (file.size === 0) return "That file is empty. Choose a different image.";
   return null;

@@ -652,7 +652,7 @@ export const glossaryTerms: GlossaryTerm[] = [
         heading: "Filekind PDF tools and limits",
         paragraphs: [
           "Filekind builds PDFs from JPG, PNG, and static WebP images and renders PDF pages back into JPG or PNG pictures, all inside the browser. Inputs are limited to 50 MB and 100 pages per PDF, with up to 150 MB of rendered output. Those ceilings keep page rendering responsive on ordinary hardware, whether the job runs on a phone or a desktop.",
-          "Password-protected PDFs are not supported, and Filekind does not edit PDF content, compress PDFs, or add OCR text. The tools cover converting between images and pages, nothing more.",
+          "Password-protected PDFs are not supported, and Filekind does not edit PDF content or add OCR text. Alongside converting between images and pages, the PDF tools merge documents, split out selected pages, rotate them, and re-encode embedded images to shrink a file.",
         ],
       },
     ],
@@ -670,7 +670,7 @@ export const glossaryTerms: GlossaryTerm[] = [
       {
         question: "Does Filekind compress or edit PDFs?",
         answer:
-          "No. Filekind converts images to PDF and renders PDF pages to images, but it does not edit PDF content, reduce PDF size, remove pages, or add searchable text.",
+          "It compresses and reorganizes them: merge documents in order, split out selected pages, turn pages left or right, and run one of three compression levels over image-heavy files. Editing text, changing artwork, and adding a searchable text layer are not offered.",
       },
     ],
   },
@@ -727,8 +727,8 @@ export const glossaryTerms: GlossaryTerm[] = [
       {
         heading: "HEIC support in Filekind",
         paragraphs: [
-          "Filekind does not convert HEIC today. The converter accepts JPEG, PNG, and static WebP, so export a JPEG or PNG copy of the photo on the device first, then work with it here.",
-          "iPhone and iPad settings can be changed to capture compatible formats directly, and photo apps can usually export a copy in another format. After that, conversion and compression run in the browser with no upload.",
+          "Images to PDF opens HEIC photos: the file is decoded in your browser and placed on the page as it is added, so an iPhone picture needs no export step. The image converter itself still expects JPEG, PNG, or static WebP, so make a JPEG copy first when you want to resize, compress, or change the format of the photo.",
+          "iPhone and iPad settings can still be changed to capture JPEG directly, and photo apps can usually export a copy in another format. Either way, conversion and compression run in the browser with no upload.",
         ],
       },
     ],
@@ -746,7 +746,7 @@ export const glossaryTerms: GlossaryTerm[] = [
       {
         question: "Does Filekind convert HEIC to JPG?",
         answer:
-          "No. Filekind converts JPEG, PNG, and static WebP only. Create a JPEG copy with your phone or another converter, then use Filekind to resize, compress, or change its format.",
+          "Only as part of building a PDF. Images to PDF decodes a HEIC photo and uses it as a page, but the converter itself takes JPEG, PNG, and static WebP. For a standalone JPEG, export one from your photo app, then resize or compress it here.",
       },
     ],
   },
@@ -3650,7 +3650,7 @@ export const glossaryTerms: GlossaryTerm[] = [
         heading: "Formats Filekind supports",
         paragraphs: [
           "Filekind converts between JPEG, PNG, and static WebP in all six directions, and compresses JPEG or PNG input to a JPEG at or below a chosen size. It also builds PDFs from those images and renders PDF pages back to JPG or PNG.",
-          "HEIC, GIF, BMP, TIFF, SVG, and AVIF are not supported for conversion today. Processing happens in the browser, so files are never uploaded. The supported set covers the formats most websites and forms ask for by default.",
+          "HEIC, GIF, BMP, TIFF, SVG, and AVIF are not supported by the converter today. HEIC is the single exception elsewhere on the site: Images to PDF opens those photos directly. Processing happens in the browser, so files are never uploaded. The supported set covers the formats most websites and forms ask for by default.",
         ],
       },
     ],
@@ -3668,7 +3668,7 @@ export const glossaryTerms: GlossaryTerm[] = [
       {
         question: "Which formats does Filekind convert?",
         answer:
-          "JPEG, PNG, and static WebP, in every combination. Animated WebP and formats such as HEIC, GIF, BMP, TIFF, SVG, and AVIF are outside the supported set today.",
+          "JPEG, PNG, and static WebP, in every combination. Animated WebP and formats such as GIF, BMP, TIFF, SVG, and AVIF are outside the supported set today, and HEIC photos are opened by Images to PDF rather than by the converter.",
       },
     ],
   },

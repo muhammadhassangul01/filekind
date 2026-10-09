@@ -23,6 +23,66 @@ export const metadata: Metadata = pageMetadata({
 
 const mainTools = toolLinks.slice(0, 6);
 
+const toolSummaries: Record<string, string> = {
+  "/compress-image": "Reduce a JPEG or PNG to a custom KB or MB limit.",
+  "/resize-image": "Set exact pixels or a percentage with the ratio locked.",
+  "/convert-image": "Switch between JPG, PNG, and static WebP.",
+  "/images-to-pdf": "Arrange your images and download them as a PDF.",
+  "/pdf-to-images": "Turn PDF pages into JPG or PNG images.",
+  "/merge-pdf": "Join separate PDFs in the order you choose.",
+};
+
+const featureCards = [
+  {
+    href: "/images-to-pdf",
+    eyebrow: "Photos \u2192 Document",
+    title: "Photos to PDF",
+    description: "Turn receipts, notes, and snapshots into a PDF that\u2019s easy to send.",
+    meta: "JPEG, PNG, WebP & HEIC",
+    cta: "Convert photos",
+  },
+  {
+    href: "/merge-pdf",
+    eyebrow: "Documents \u2192 One file",
+    title: "Merge PDF",
+    description: "Combine separate PDFs in the right order. One document, ready to share.",
+    meta: "Up to 20 PDFs \u00b7 Keep original page quality",
+    cta: "Merge PDFs",
+  },
+  {
+    href: "/split-pdf",
+    eyebrow: "One file \u2192 Your pages",
+    title: "Split PDF",
+    description: "Save selected pages or divide a document into smaller PDFs.",
+    meta: "Page previews \u00b7 Ranges or individual pages",
+    cta: "Split a PDF",
+  },
+  {
+    href: "/compress-pdf",
+    eyebrow: "Same document \u2192 Less space",
+    title: "Compress PDF",
+    description: "Make image-heavy PDFs smaller and easier to send, with a quality level you choose.",
+    meta: "Three compression levels \u00b7 Text stays selectable",
+    cta: "Compress a PDF",
+  },
+  {
+    href: "/rotate-pdf",
+    eyebrow: "Sideways \u2192 Right way",
+    title: "Rotate PDF",
+    description: "Turn selected pages and save a document that\u2019s comfortable to read.",
+    meta: "Rotate left or right \u00b7 Keep original quality",
+    cta: "Rotate pages",
+  },
+  {
+    href: "/pdf-to-images",
+    eyebrow: "Document \u2192 Images",
+    title: "PDF to images",
+    description: "Save PDF pages as pictures for presentations, sharing, and more.",
+    meta: "PNG or JPEG \u00b7 Individual images or ZIP",
+    cta: "Save images",
+  },
+];
+
 const taskLinks = guideLinks.slice(0, 8);
 
 const homeFaqs = [
@@ -39,7 +99,7 @@ const homeFaqs = [
   {
     question: "Which file formats are supported?",
     answer:
-      "Images: JPEG, PNG, and static WebP, convertible in all six directions. PDFs can be created from images and rendered back to JPG or PNG pages.",
+      "Images: JPEG, PNG, and static WebP, convertible in all six directions, plus HEIC photos when you build a PDF. PDFs can be created from images and rendered back to JPG or PNG pages.",
   },
   {
     question: "What can I do with a photo that is too large?",
@@ -89,23 +149,32 @@ export default function Home() {
             </span>
             <span>
               <strong>{link.label}</strong>
-              <span>
-                {link.href === "/compress-image"
-                  ? "Reduce a JPEG or PNG to a custom KB or MB limit."
-                  : link.href === "/resize-image"
-                    ? "Set exact pixels or a percentage with the ratio locked."
-                    : link.href === "/convert-image"
-                      ? "Switch between JPG, PNG, and static WebP."
-                      : link.href === "/images-to-pdf"
-                        ? "Arrange your images and download them as a PDF."
-                        : "Turn PDF pages into JPG or PNG images."}
-              </span>
+              <span>{toolSummaries[link.href] ?? "Runs in your browser with no upload."}</span>
             </span>
             <span className="home-tool-arrow" aria-hidden="true">
               -&gt;
             </span>
           </Link>
         ))}
+      </section>
+
+      <section className="home-section" aria-labelledby="home-featured">
+        <h2 id="home-featured">Everyday document tasks</h2>
+        <p>Six tasks people arrive with, each one handled by a tool that keeps your files on this device.</p>
+        <div className="feature-grid">
+          {featureCards.map((card) => (
+            <Link className="feature-card" href={card.href} key={card.href}>
+              <span className="feature-eyebrow">{card.eyebrow}</span>
+              <strong className="feature-title">{card.title}</strong>
+              <span className="feature-description">{card.description}</span>
+              <span className="feature-meta">{card.meta}</span>
+              <span className="feature-cta">
+                {card.cta}
+                <i aria-hidden="true">↗</i>
+              </span>
+            </Link>
+          ))}
+        </div>
       </section>
 
       <section className="home-section" aria-labelledby="home-converters">

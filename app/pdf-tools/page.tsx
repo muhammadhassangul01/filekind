@@ -6,8 +6,17 @@ import { guideLinks, toolLinks } from "@/lib/content";
 import { itemListSchema, pageMetadata, webpageSchema } from "@/lib/seo";
 
 const pdfTools = toolLinks.filter((link) =>
-  ["/images-to-pdf", "/pdf-to-images", "/jpg-to-pdf", "/png-to-pdf", "/webp-to-pdf", "/pdf-to-jpg", "/pdf-to-png"].includes(link.href),
+  ["/images-to-pdf", "/pdf-to-images", "/merge-pdf", "/split-pdf", "/compress-pdf", "/rotate-pdf", "/jpg-to-pdf", "/png-to-pdf", "/webp-to-pdf", "/pdf-to-jpg", "/pdf-to-png"].includes(link.href),
 );
+
+const pdfToolNotes: Record<string, string> = {
+  "/merge-pdf": "Join up to 20 documents in the order you choose.",
+  "/split-pdf": "Keep selected pages or save each page on its own.",
+  "/compress-pdf": "Three levels, with text left selectable.",
+  "/rotate-pdf": "Turn single pages or the whole document.",
+  "/images-to-pdf": "Turn receipts, notes, and snapshots into one PDF.",
+  "/pdf-to-images": "Save pages as JPG or PNG, one at a time or as a ZIP.",
+};
 
 const faqs = [
   {
@@ -21,9 +30,9 @@ const faqs = [
       "Fit page sizes each page around its image, while A4 and US Letter use fixed paper sizes with optional margins and automatic or forced orientation.",
   },
   {
-    question: "Does Filekind edit or compress existing PDFs?",
+    question: "What can Filekind do with an existing PDF?",
     answer:
-      "No. Filekind builds PDFs from images and renders PDF pages as images. It does not edit PDF content, run OCR, remove pages, or shrink an existing PDF file.",
+      "It can merge documents in your order, split out selected pages, turn pages left or right, and compress image-heavy files in your browser. It does not run OCR, edit text, fill forms, or change what a page says.",
   },
   {
     question: "How large can a PDF be?",
@@ -33,18 +42,19 @@ const faqs = [
 ];
 
 export const metadata: Metadata = pageMetadata({
-  title: "Online PDF Tools: Images to PDF and PDF to Images",
+  title: "Online PDF Tools: Merge, Split, Compress, Convert",
   description:
-    "Free browser PDF tools: turn photos into a PDF, render PDF pages as JPG or PNG, and convert single formats like JPG to PDF or PDF to JPG.",
+    "Free browser PDF tools: merge, split, rotate, and compress PDFs, build a PDF from photos, and render pages as JPG or PNG with no upload.",
   path: "/pdf-tools",
   keywords: [
     "online pdf tools",
+    "merge pdf",
+    "split pdf",
+    "compress pdf",
+    "rotate pdf",
     "image to pdf",
     "pdf to image",
-    "jpg to pdf",
-    "pdf to jpg",
-    "free pdf converter",
-    "create pdf from photos",
+    "free pdf tools",
   ],
 });
 
@@ -53,7 +63,7 @@ export default function PdfToolsHubPage() {
   const schema = [
     webpageSchema({
       title: "Online PDF tools",
-      description: "Free browser-based tools to build PDFs from images and turn PDF pages into images.",
+      description: "Free browser-based tools to build, merge, split, rotate, and compress PDFs, and to turn PDF pages into images.",
       path,
     }),
     itemListSchema({ name: "Filekind PDF tools", links: pdfTools }),
@@ -71,8 +81,8 @@ export default function PdfToolsHubPage() {
         <p className="eyebrow">Toolkit</p>
         <h1>Free online PDF tools</h1>
         <p className="intro-copy">
-          Build a PDF from photos or screenshots, pull every page back out as an image, and use the exact format pair
-          you need. Processing happens in your browser, so documents stay private.
+          Build a PDF from photos, join separate documents, pull pages out, turn them, shrink them, or render them as
+          images. Everything happens in your browser, so documents stay private.
         </p>
       </section>
 
@@ -84,7 +94,7 @@ export default function PdfToolsHubPage() {
               <span className="home-tool-icon" aria-hidden="true">{link.label.split(" ")[0].slice(0, 3).toUpperCase()}</span>
               <span>
                 <strong>{link.label}</strong>
-                <span>Runs in your browser with no upload.</span>
+                <span>{pdfToolNotes[link.href] ?? "Runs in your browser with no upload."}</span>
               </span>
               <span className="home-tool-arrow" aria-hidden="true">-&gt;</span>
             </Link>
