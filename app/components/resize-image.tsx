@@ -20,7 +20,7 @@ import {
 type Result = { blob: Blob; url: string; width: number; height: number };
 const supportedTypes = ["image/jpeg", "image/png", "image/webp"];
 
-export default function ResizeImage() {
+export default function ResizeImage({ title, introCopy, initialWidth, initialHeight, initialFormat, initialQuality, extraContent }: { title?: string; introCopy?: string; initialWidth?: number; initialHeight?: number; initialFormat?: "jpg" | "png"; initialQuality?: number; extraContent?: React.ReactNode }) {
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<ImageInfo | null>(null);
   const [mode, setMode] = useState<"percent" | "pixels">("percent");
@@ -28,8 +28,8 @@ export default function ResizeImage() {
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [lock, setLock] = useState(true);
-  const [format, setFormat] = useState<"jpg" | "png">("jpg");
-  const [quality, setQuality] = useState(90);
+  const [format, setFormat] = useState<"jpg" | "png">(initialFormat === "png" ? "png" : "jpg");
+  const [quality, setQuality] = useState(initialQuality ?? 90);
   const [result, setResult] = useState<Result | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState("");
@@ -109,9 +109,9 @@ export default function ResizeImage() {
       const info = await decodeImage(nextFile);
       setFile(nextFile);
       setSource(info);
-      setWidth(String(info.width));
-      setHeight(String(info.height));
-      setMode("percent");
+      setWidth(String(initialWidth ?? info.width));
+      setHeight(String(initialHeight ?? info.height));
+      setMode(initialWidth && initialHeight ? "pixels" : "percent");
       setPercent("50");
       setStatus("Image ready to resize.");
     } catch (decodeError) {
@@ -176,10 +176,9 @@ export default function ResizeImage() {
   return (
     <ToolLayout active="resize">
       <section className="intro">
-        <h1>Resize Image Online Free</h1>
+        <h1>{title ?? "Resize Image Online Free"}</h1>
         <p className="intro-copy">
-          Change image dimensions by percentage or exact pixels in your browser. Keep the aspect ratio, choose JPG or
-          PNG output, and never upload your file.
+          {introCopy ?? "Change image dimensions by percentage or exact pixels in your browser. Keep the aspect ratio, choose JPG or PNG output, and never upload your file."}
         </p>
       </section>
       <div className="tool-grid">
@@ -312,6 +311,7 @@ export default function ResizeImage() {
         <span><strong>Limits</strong> Up to {MAX_DIMENSION.toLocaleString()} px per side and {MAX_PIXELS / 1_000_000} MP.</span>
       </div>
       <ResizeSeoContent />
+      {extraContent}
       <ToolFaq faqs={resizeFaqs} howTo={resizeHowTo} extraFaqs={[resizePanelFaq]} />
     </ToolLayout>
   );

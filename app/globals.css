@@ -190,6 +190,13 @@ h1 { font-size: clamp(32px, 4.4vw, 44px); letter-spacing: -.04em; line-height: 1
 .admin-reset-controls .text-input { flex: 1; }
 .share-bar { background: #eef1f6; height: 6px; margin-bottom: 5px; min-width: 70px; }
 .share-bar i { background: var(--blue); display: block; height: 100%; }
+.modal-backdrop { align-items: center; background: rgba(23, 32, 51, .45); display: flex; inset: 0; justify-content: center; padding: 18px; position: fixed; z-index: 10; }
+.paywall-modal { background: #fff; border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 20px 60px rgba(23, 32, 51, .22); max-width: 480px; padding: 26px; position: relative; width: 100%; }
+.paywall-modal h2 { margin-top: 0; }
+.paywall-modal p { color: var(--muted); line-height: 1.55; }
+.modal-close { background: transparent; border: 0; color: var(--muted); cursor: pointer; font-size: 25px; line-height: 1; padding: 4px; position: absolute; right: 14px; top: 12px; }
+.paywall-options { display: grid; gap: 8px; margin: 18px 0 22px; }
+.paywall-options .secondary-button { align-items: center; display: flex; justify-content: center; text-align: center; }
 @media (max-width: 720px) { .admin-heading { display: block; } .admin-actions { margin-top: 18px; } .admin-tables { grid-template-columns: 1fr; gap: 22px; } }
 @media (max-width: 900px) {
   .site-header { height: 64px; position: relative; z-index: 4; }

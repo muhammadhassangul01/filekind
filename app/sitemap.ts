@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { comparisons, glossaryTerms, guides, hubLinks } from "@/lib/content";
 import { SITE_URL } from "@/lib/seo";
+import { nicheTools } from "@/lib/niche-tools";
 
 export const dynamic = "force-static";
 
@@ -16,31 +17,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 1,
   } as const;
 
-  const tools: MetadataRoute.Sitemap = [
-    "/compress-image",
-    "/resize-image",
-    "/convert-image",
-    "/images-to-pdf",
-    "/pdf-to-images",
-    "/merge-pdf",
-    "/split-pdf",
-    "/compress-pdf",
-    "/rotate-pdf",
-    "/jpg-to-pdf",
-    "/png-to-pdf",
-    "/webp-to-pdf",
-    "/pdf-to-jpg",
-    "/pdf-to-png",
-  ].map((path) => ({ url: `${SITE_URL}${path}`, lastModified: new Date(), changeFrequency: weekly, priority: 0.9 }));
-
-  const converters: MetadataRoute.Sitemap = [
-    "/convert-image/jpg-to-png",
-    "/convert-image/jpg-to-webp",
-    "/convert-image/png-to-jpg",
-    "/convert-image/png-to-webp",
-    "/convert-image/webp-to-jpg",
-    "/convert-image/webp-to-png",
-  ].map((path) => ({ url: `${SITE_URL}${path}`, lastModified: new Date(), changeFrequency: weekly, priority: 0.9 }));
+  const catalogEntries: MetadataRoute.Sitemap = nicheTools.map((tool) => ({
+    url: `${SITE_URL}/${tool.path.join("/")}`,
+    lastModified: new Date(),
+    changeFrequency: weekly,
+    priority: 0.95,
+  }));
 
   const hubs: MetadataRoute.Sitemap = [
     ...hubLinks.map((link) => link.href),
@@ -71,8 +53,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     home,
-    ...tools,
-    ...converters,
+    ...catalogEntries,
     ...hubs,
     ...guideEntries,
     ...comparisonEntries,

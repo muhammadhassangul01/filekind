@@ -10,13 +10,13 @@ import { compressToTarget, formatBytes, formatDimensions, releaseImage, validate
 type Result = { blob: Blob; url: string; width: number; height: number };
 const now = () => performance.now();
 
-export default function ImageCompressor() {
+export default function ImageCompressor({ title, introCopy, initialTargetKB, extraContent }: { title?: string; introCopy?: string; initialTargetKB?: number; extraContent?: React.ReactNode }) {
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<ImageInfo | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [target, setTarget] = useState(() => {
     if (typeof window === "undefined") return "500";
-    const value = new URLSearchParams(window.location.search).get("targetKB");
+    const value = initialTargetKB?.toString() ?? new URLSearchParams(window.location.search).get("targetKB");
     const numericValue = Number(value);
     return value && /^\d+(?:\.\d+)?$/.test(value) && numericValue >= 1 && numericValue <= 50_000 ? value : "500";
   });
@@ -149,7 +149,7 @@ export default function ImageCompressor() {
   const targetBytes = Number(target) * (unit === "MB" ? 1_000_000 : 1_000);
 
   return <ToolLayout active="compressor">
-    <section className="intro"><h1>Compress Image to KB or MB</h1><p className="intro-copy">Set a maximum size and create a lighter JPEG privately in your browser.</p></section>
+    <section className="intro"><h1>{title ?? "Compress Image to KB or MB"}</h1><p className="intro-copy">{introCopy ?? "Set a maximum size and create a lighter JPEG privately in your browser."}</p></section>
     <div className="tool-grid">
       <section className="tool-panel" aria-labelledby={result ? "compress-result-heading" : "compress-heading"}>
         {result ? <div className="success-state">
@@ -173,6 +173,6 @@ export default function ImageCompressor() {
       </section>
     </div>
     <div className="support-strip"><span><strong>Private</strong> Files stay in your browser.</span><span><strong>Limits</strong> Up to 25 MB, 16,000 px per side, and 48 MP.</span></div>
-    <CompressSeoContent /><p className="info-panel preset-link">Start with a <Link href="/compress-image?targetKB=200">200 KB target</Link>; the preset changes the starting value on this page and is not a separate tool.</p><ToolFaq faqs={compressFaqs} howTo={compressHowTo} extraFaqs={[compressPanelFaq]} />
+    <CompressSeoContent /><p className="info-panel preset-link">Start with a <Link href="/compress-image?targetKB=200">200 KB target</Link>; the preset changes the starting value on this page and is not a separate tool.</p>{extraContent}<ToolFaq faqs={compressFaqs} howTo={compressHowTo} extraFaqs={[compressPanelFaq]} />
   </ToolLayout>;
 }
