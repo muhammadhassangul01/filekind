@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import JsonLd from "./json-ld";
 import SiteFooter from "./site-footer";
@@ -127,25 +127,43 @@ export default function ToolLayout({
   );
 }
 
-export function FileDrop({ accept, onFile, busy, inputId }: { accept: string; onFile: (file: File) => void; busy: boolean; inputId: string }) {
+export function FileDrop({ accept, onFile, busy, inputId, selectImageLabel }: { accept: string; onFile: (file: File) => void; busy: boolean; inputId: string; selectImageLabel?: string }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (file) onFile(file);
     event.target.value = "";
   }
 
-  function handleDrop(event: React.DragEvent<HTMLLabelElement>) {
+  function handleDrop(event: React.DragEvent<HTMLLabelElement | HTMLDivElement>) {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) onFile(file);
   }
 
+  const prompt = <>
+    <span className="upload-icon" aria-hidden="true">+</span>
+    <strong>{busy ? "Working on your image..." : "Choose an image or drop it here"}</strong>
+    <span>JPEG, PNG, or static WebP, up to 25 MB</span>
+  </>;
+
+  if (selectImageLabel) {
+    return (
+      <div className="dropzone" onDragOver={(event) => event.preventDefault()} onDrop={handleDrop}>
+        {prompt}
+        <button className="primary-button dropzone-cta" type="button" onClick={() => inputRef.current?.click()} disabled={busy}>
+          {selectImageLabel}
+        </button>
+        <input ref={inputRef} className="file-input" id={inputId} type="file" accept={accept} onChange={handleChange} disabled={busy} aria-label={selectImageLabel} />
+      </div>
+    );
+  }
+
   return (
     <label className="dropzone" htmlFor={inputId} onDragOver={(event) => event.preventDefault()} onDrop={handleDrop}>
-      <span className="upload-icon" aria-hidden="true">+</span>
-      <strong>{busy ? "Working on your image..." : "Choose an image or drop it here"}</strong>
-      <span>JPEG, PNG, or static WebP, up to 25 MB</span>
-      <input className="file-input" id={inputId} type="file" accept={accept} onChange={handleChange} disabled={busy} />
+      {prompt}
+      <input ref={inputRef} className="file-input" id={inputId} type="file" accept={accept} onChange={handleChange} disabled={busy} />
     </label>
   );
 }

@@ -96,7 +96,7 @@ export const guidesB: Guide[] = [
     keywords: ["make a PDF from photos", "photos to PDF", "create PDF from images", "image to PDF converter", "photo PDF", "JPG to PDF", "PDF from pictures"],
     tool: { href: "/images-to-pdf", label: "Images to PDF tool" },
     related: [
-      { href: "/jpg-to-pdf", label: "JPG to PDF" },
+      { href: "/images-to-pdf", label: "JPG to PDF" },
       { href: "/guides/how-to-combine-images-into-one-pdf", label: "Combine images into one PDF" },
       { href: "/guides/how-to-make-a-photo-pdf-on-a-phone", label: "Make a photo PDF on a phone" },
       { href: "/compare/a4-vs-letter", label: "A4 vs Letter" },
@@ -189,8 +189,8 @@ export const guidesB: Guide[] = [
     keywords: ["combine images into one PDF", "merge images to PDF", "multiple images to one PDF", "join pictures into PDF", "image to PDF", "combine photos PDF", "one PDF file"],
     tool: { href: "/images-to-pdf", label: "Images to PDF tool" },
     related: [
-      { href: "/jpg-to-pdf", label: "JPG to PDF" },
-      { href: "/png-to-pdf", label: "PNG to PDF" },
+      { href: "/images-to-pdf", label: "JPG to PDF" },
+      { href: "/images-to-pdf", label: "PNG to PDF" },
       { href: "/guides/how-to-make-a-pdf-from-photos", label: "Make a PDF from photos" },
       { href: "/pdf-to-images", label: "PDF to images" },
       { href: "/compare/a4-vs-letter", label: "A4 vs Letter" },
@@ -278,10 +278,10 @@ export const guidesB: Guide[] = [
     summary: "Converting a PDF to JPG means rendering each page as a separate photo file in your browser. You choose the PDF, generate the pages, and download them individually or together as a ZIP archive.",
     updated: "2026-09-24",
     keywords: ["convert PDF to JPG", "PDF to JPG", "PDF to images", "PDF pages to JPEG", "PDF to picture", "change PDF to JPG", "PDF to image converter"],
-    tool: { href: "/pdf-to-jpg", label: "PDF to JPG tool" },
+    tool: { href: "/pdf-to-images", label: "PDF to JPG tool" },
     related: [
       { href: "/pdf-to-images", label: "PDF to images" },
-      { href: "/pdf-to-png", label: "PDF to PNG" },
+      { href: "/pdf-to-images", label: "PDF to PNG" },
       { href: "/guides/how-to-convert-pdf-to-png", label: "Convert a PDF to PNG" },
       { href: "/guides/how-to-extract-images-from-a-pdf", label: "Extract images from a PDF" },
       { href: "/glossary/pdf", label: "PDF format" },
@@ -293,7 +293,7 @@ export const guidesB: Guide[] = [
           "A PDF page can hold text, vectors, and images at once, which is why some apps refuse to accept it where a picture is expected. Rendering the page to JPG flattens all of that into pixels, so the result opens anywhere a photo can open.",
           "The trade is that the text stops being selectable. What you get is a picture of the page, which is ideal for previews, slides, and message attachments, and less useful if you need to copy passages out of the document. Hyperlinks and form fields on the page disappear too, because a JPG carries pixels and nothing else.",
         ],
-        links: [{ href: "/pdf-to-jpg", label: "PDF to JPG tool" }],
+        links: [{ href: "/pdf-to-images", label: "PDF to JPG tool" }],
       },
       {
         heading: "Load the PDF and pick JPG",
@@ -367,9 +367,9 @@ export const guidesB: Guide[] = [
     summary: "Converting a PDF to PNG renders each page of the document as a separate PNG image in your browser. You set the format, generate the pages, and download them individually or together as a ZIP.",
     updated: "2026-09-24",
     keywords: ["convert PDF to PNG", "PDF to PNG", "PDF pages to PNG", "PDF to image", "change PDF to PNG", "PDF to pictures", "render PDF as PNG"],
-    tool: { href: "/pdf-to-png", label: "PDF to PNG tool" },
+    tool: { href: "/pdf-to-images", label: "PDF to PNG tool" },
     related: [
-      { href: "/pdf-to-jpg", label: "PDF to JPG" },
+      { href: "/pdf-to-images", label: "PDF to JPG" },
       { href: "/pdf-to-images", label: "PDF to images" },
       { href: "/guides/how-to-convert-pdf-to-jpg", label: "Convert a PDF to JPG" },
       { href: "/glossary/png", label: "PNG format" },
@@ -390,7 +390,7 @@ export const guidesB: Guide[] = [
           "Choose the document from your device. Inputs are limited to 50 MB and 100 pages, and password-protected files are rejected with a clear message rather than rendered as blank images.",
           "Select PNG as the output format, then start the render. Everything happens locally in the browser, so the document is not uploaded to a server and no account is involved in the job.",
         ],
-        links: [{ href: "/pdf-to-png", label: "PDF to PNG tool" }],
+        links: [{ href: "/pdf-to-images", label: "PDF to PNG tool" }],
       },
       {
         heading: "Let the pages render one at a time",
@@ -458,8 +458,8 @@ export const guidesB: Guide[] = [
     keywords: ["extract images from PDF", "PDF image extractor", "pull pictures from PDF", "PDF to images", "save PDF pages as images", "PDF to JPG", "PDF pictures"],
     tool: { href: "/pdf-to-images", label: "PDF to images tool" },
     related: [
-      { href: "/pdf-to-jpg", label: "PDF to JPG" },
-      { href: "/pdf-to-png", label: "PDF to PNG" },
+      { href: "/pdf-to-images", label: "PDF to JPG" },
+      { href: "/pdf-to-images", label: "PDF to PNG" },
       { href: "/guides/how-to-convert-pdf-to-jpg", label: "Convert a PDF to JPG" },
       { href: "/images-to-pdf", label: "Images to PDF" },
       { href: "/glossary/pdf", label: "PDF format" },
@@ -812,7 +812,7 @@ export const guidesB: Guide[] = [
     tool: { href: "/images-to-pdf", label: "Images to PDF tool" },
     related: [
       { href: "/guides/how-to-make-a-pdf-from-photos", label: "Make a PDF from photos" },
-      { href: "/jpg-to-pdf", label: "JPG to PDF" },
+      { href: "/images-to-pdf", label: "JPG to PDF" },
       { href: "/compare/a4-vs-letter", label: "A4 vs Letter" },
       { href: "/compress-image", label: "Compress image" },
       { href: "/glossary/heic", label: "HEIC files" },

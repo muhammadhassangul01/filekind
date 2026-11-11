@@ -685,7 +685,7 @@ export const guidesA: Guide[] = [
       { href: "/guides/how-to-compress-a-picture-for-email", label: "Compress a picture for email" },
       { href: "/guides/compress-image-for-government-form", label: "Compress an image for a government form" },
       { href: "/resize-image", label: "Resize image" },
-      { href: "/jpg-to-pdf", label: "JPG to PDF" },
+      { href: "/images-to-pdf", label: "JPG to PDF" },
     ],
     sections: [
       {
@@ -738,7 +738,7 @@ export const guidesA: Guide[] = [
         ],
         links: [
           { href: "/resize-image", label: "Resize image" },
-          { href: "/jpg-to-pdf", label: "JPG to PDF" },
+          { href: "/images-to-pdf", label: "JPG to PDF" },
         ],
       },
     ],
@@ -1650,7 +1650,7 @@ export const guidesA: Guide[] = [
       { href: "/guides/how-to-convert-jpg-to-png", label: "Convert JPG to PNG" },
       { href: "/guides/how-to-open-a-webp-image", label: "Open a WebP image" },
       { href: "/glossary/image-format", label: "Image format" },
-      { href: "/pdf-to-jpg", label: "PDF to JPG" },
+      { href: "/pdf-to-images", label: "PDF to JPG" },
     ],
     sections: [
       {
@@ -1701,8 +1701,8 @@ export const guidesA: Guide[] = [
           "Batch conversion is not supported; process files one at a time.",
         ],
         links: [
-          { href: "/pdf-to-jpg", label: "PDF to JPG" },
-          { href: "/pdf-to-png", label: "PDF to PNG" },
+          { href: "/pdf-to-images", label: "PDF to JPG" },
+          { href: "/pdf-to-images", label: "PDF to PNG" },
         ],
       },
       {

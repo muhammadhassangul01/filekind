@@ -54,7 +54,7 @@ export default function ImageToolsHubPage() {
     }),
     itemListSchema({
       name: "Filekind image tools",
-      links: [...toolLinks.filter((link) => !link.href.includes("pdf-to") && link.href !== "/jpg-to-pdf" && link.href !== "/png-to-pdf" && link.href !== "/webp-to-pdf"), ...converterLinks],
+      links: [...toolLinks.filter((link) => ["/compress-image", "/resize-image", "/convert-image", "/images-to-pdf"].includes(link.href)), ...converterLinks],
     }),
     {
       "@context": "https://schema.org",

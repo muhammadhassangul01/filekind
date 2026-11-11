@@ -6,7 +6,7 @@ import { guideLinks, toolLinks } from "@/lib/content";
 import { itemListSchema, pageMetadata, webpageSchema } from "@/lib/seo";
 
 const pdfTools = toolLinks.filter((link) =>
-  ["/images-to-pdf", "/pdf-to-images", "/merge-pdf", "/split-pdf", "/compress-pdf", "/rotate-pdf", "/jpg-to-pdf", "/png-to-pdf", "/webp-to-pdf", "/pdf-to-jpg", "/pdf-to-png"].includes(link.href),
+  ["/images-to-pdf", "/pdf-to-images", "/merge-pdf", "/split-pdf", "/compress-pdf", "/rotate-pdf"].includes(link.href),
 );
 
 const pdfToolNotes: Record<string, string> = {

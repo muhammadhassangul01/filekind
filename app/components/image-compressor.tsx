@@ -10,13 +10,14 @@ import { compressToTarget, formatBytes, formatDimensions, releaseImage, validate
 type Result = { blob: Blob; url: string; width: number; height: number };
 const now = () => performance.now();
 
-export default function ImageCompressor({ title, introCopy, initialTargetKB, extraContent }: { title?: string; introCopy?: string; initialTargetKB?: number; extraContent?: React.ReactNode }) {
+export default function ImageCompressor({ title, introCopy, initialTargetKB, selectImageLabel, actionLabel, extraContent }: { title?: string; introCopy?: string; initialTargetKB?: number; selectImageLabel?: string; actionLabel?: string; extraContent?: React.ReactNode }) {
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<ImageInfo | null>(null);
   const [result, setResult] = useState<Result | null>(null);
   const [target, setTarget] = useState(() => {
-    if (typeof window === "undefined") return "500";
-    const value = initialTargetKB?.toString() ?? new URLSearchParams(window.location.search).get("targetKB");
+    const value = initialTargetKB?.toString() ?? (
+      typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("targetKB")
+    );
     const numericValue = Number(value);
     return value && /^\d+(?:\.\d+)?$/.test(value) && numericValue >= 1 && numericValue <= 50_000 ? value : "500";
   });
@@ -161,10 +162,10 @@ export default function ImageCompressor({ title, introCopy, initialTargetKB, ext
           <div className="success-secondary-actions"><button className="secondary-button" type="button" onClick={adjustSettings}>Adjust settings</button><button className="secondary-button" type="button" onClick={chooseAnotherImage}>Choose another image</button></div>
         </div> : <>
         <div className="panel-heading"><div><h2 id="compress-heading">Choose an image</h2><p className="small-note">JPEG or PNG, up to 25 MB</p></div></div>
-        {source && file ? <div className="selected-file"><img src={source.url} alt={`Preview of ${file.name}`} /><div className="selected-file-details"><strong title={file.name} aria-label={`Selected file: ${file.name}`}>{file.name}</strong><span>{formatBytes(file.size)} · {formatDimensions(source.width, source.height)}</span></div><label className="change-image" htmlFor="compress-file">Change image<input className="file-input" id="compress-file" type="file" accept="image/jpeg,image/png" onChange={(event) => { const nextFile = event.target.files?.[0]; if (nextFile) void chooseFile(nextFile); event.target.value = ""; }} disabled={busy} /></label></div> : <FileDrop inputId="compress-file" accept="image/jpeg,image/png" onFile={chooseFile} busy={busy} />}
+        {source && file ? <div className="selected-file"><img src={source.url} alt={`Preview of ${file.name}`} /><div className="selected-file-details"><strong title={file.name} aria-label={`Selected file: ${file.name}`}>{file.name}</strong><span>{formatBytes(file.size)} · {formatDimensions(source.width, source.height)}</span></div><label className="change-image" htmlFor="compress-file">Change image<input className="file-input" id="compress-file" type="file" accept="image/jpeg,image/png" onChange={(event) => { const nextFile = event.target.files?.[0]; if (nextFile) void chooseFile(nextFile); event.target.value = ""; }} disabled={busy} /></label></div> : <FileDrop inputId="compress-file" accept="image/jpeg,image/png" onFile={chooseFile} busy={busy} selectImageLabel={selectImageLabel} />}
         <div className="controls">
           <div className="target-field"><label className="field-label" htmlFor="target-size">Maximum file size</label><div className="size-row"><input className="text-input" id="target-size" type="number" min="1" value={target} onChange={(event) => updateTarget(event.target.value)} suppressHydrationWarning /><select className="select-input" value={unit} onChange={(event) => updateUnit(event.target.value)} aria-label="Target size unit"><option>KB</option><option>MB</option></select></div><div className="presets" aria-label="Target size presets"><button className={`preset ${target === "100" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("100"); updateUnit("KB"); }}>100 KB</button><button className={`preset ${target === "200" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("200"); updateUnit("KB"); }}>200 KB</button><button className={`preset ${target === "500" && unit === "KB" ? "active" : ""}`} type="button" onClick={() => { updateTarget("500"); updateUnit("KB"); }}>500 KB</button></div></div>
-          <div className="action-field"><button ref={actionRef} className="primary-button" type="button" onClick={compress} suppressHydrationWarning disabled={busy || !file}>{busy ? "Compressing..." : "Generate"}</button>{busy && <button className="secondary-button" type="button" onClick={cancel} style={{ marginTop: 8, width: "100%" }}>Cancel</button>}</div>
+          <div className="action-field"><button ref={actionRef} className="primary-button" type="button" onClick={compress} suppressHydrationWarning disabled={busy || !file}>{busy ? "Compressing..." : actionLabel ?? "Generate"}</button>{busy && <button className="secondary-button" type="button" onClick={cancel} style={{ marginTop: 8, width: "100%" }}>Cancel</button>}</div>
         </div>
         <p className="control-note">1 KB = 1,000 bytes. Transparency becomes white and dimensions may shrink.</p>
         <p className="status" role="status" aria-live="polite">{status}</p>

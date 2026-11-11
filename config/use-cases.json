@@ -1,0 +1,492 @@
+[
+  {
+    "slug": "compress-image-under-200kb",
+    "component": "compress",
+    "title": "Compress Image Under 200 KB for Government Uploads",
+    "description": "Government, visa, and application portals often set strict upload caps that vary by form. Set a 200 KB JPEG target in this browser-based tool and check the receiving portal's current pixel and format rules before uploading.",
+    "keywords": [
+      "compress image under 200kb",
+      "government upload image size",
+      "photo under 200kb"
+    ],
+    "audience": "Government and application portal uploads",
+    "target": {
+      "maxKB": 200,
+      "format": "jpg"
+    },
+    "preset": {
+      "targetKB": 200,
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: portal-specific; enter its exact pixel limit in the resize tool if one is listed.",
+      "Accepted formats: JPEG is widely supported; confirm the destination form's allowed types.",
+      "Recommended DPI: online forms use pixel dimensions; use 300 DPI only when preparing a print or scan."
+    ],
+    "related": [
+      {
+        "href": "/resize-image",
+        "label": "Resize an image to exact pixels"
+      },
+      {
+        "href": "/convert-image",
+        "label": "Convert an image format"
+      }
+    ]
+  },
+  {
+    "slug": "resize-image-for-passport",
+    "component": "resize",
+    "title": "Resize a Passport Photo to 2 x 2 Inches",
+    "description": "A 2 x 2 inch passport photo is a common US print size, while digital portals specify pixel dimensions separately. Resize locally to a 600 x 600 pixel JPEG and verify the current authority rules for your application.",
+    "keywords": [
+      "resize passport photo 2x2",
+      "passport photo 600x600",
+      "passport image dimensions"
+    ],
+    "audience": "Passport and identity-document applicants",
+    "target": {
+      "width": 600,
+      "height": 600,
+      "format": "jpg"
+    },
+    "preset": {
+      "width": 600,
+      "height": 600,
+      "format": "jpg",
+      "quality": 90
+    },
+    "requirements": [
+      "Max dimensions: 600 x 600 px is a starting point for a square upload; use the portal's exact pixel range.",
+      "Accepted formats: JPEG is common for digital photo applications; check the receiving authority.",
+      "Recommended DPI: 300 DPI is a print starting point; digital acceptance depends on pixels and photo composition."
+    ],
+    "related": [
+      {
+        "href": "/compress-image-under-200kb",
+        "label": "Compress an image under 200 KB"
+      },
+      {
+        "href": "/convert-image",
+        "label": "Convert a photo to another format"
+      }
+    ]
+  },
+  {
+    "slug": "compress-photo-for-dv-lottery-under-240kb",
+    "component": "compress",
+    "title": "Compress a DV Lottery Photo Under 240 KB",
+    "description": "The Diversity Visa entry workflow checks photo dimensions, file type, and composition in addition to file size. Set a 240 KB JPEG target locally in your browser, then verify the current DV Program instructions before submitting.",
+    "keywords": [
+      "compress dv lottery photo 240kb",
+      "dv lottery photo file size",
+      "dv photo compressor"
+    ],
+    "audience": "Diversity Visa applicants",
+    "target": {
+      "maxKB": 240,
+      "format": "jpg"
+    },
+    "preset": {
+      "targetKB": 240,
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: use the exact square pixel dimensions specified by the current DV entry instructions.",
+      "Accepted formats: JPEG is the standard digital photo format; confirm current program rules.",
+      "Recommended DPI: digital checks use pixel dimensions, not DPI metadata; print resolution does not certify compliance."
+    ],
+    "related": [
+      {
+        "href": "/resize-image-for-passport",
+        "label": "Resize a square identity photo"
+      },
+      {
+        "href": "/compress-image",
+        "label": "Open the image compressor"
+      }
+    ]
+  },
+  {
+    "slug": "resize-photo-for-schengen-visa",
+    "component": "resize",
+    "title": "Resize a Photo for a Schengen Visa Upload",
+    "description": "Schengen visa photo guidance commonly describes a 35 x 45 mm portrait, but digital upload pixel limits vary by application center. Resize locally to 413 x 531 pixels as a proportional starting point and confirm the exact portal requirements.",
+    "keywords": [
+      "resize schengen visa photo",
+      "35x45 visa photo pixels",
+      "schengen photo resize"
+    ],
+    "audience": "Schengen visa applicants",
+    "target": {
+      "width": 413,
+      "height": 531,
+      "format": "jpg"
+    },
+    "preset": {
+      "width": 413,
+      "height": 531,
+      "format": "jpg",
+      "quality": 88
+    },
+    "requirements": [
+      "Max dimensions: 413 x 531 px is a proportional 35 x 45 mm starting point at about 300 DPI, not a universal portal limit.",
+      "Accepted formats: JPEG is common for uploads; check the destination consulate or visa center.",
+      "Recommended DPI: about 300 DPI for a 35 x 45 mm print; digital forms usually validate pixels instead."
+    ],
+    "related": [
+      {
+        "href": "/compress-image-under-200kb",
+        "label": "Compress an image under 200 KB"
+      },
+      {
+        "href": "/resize-image",
+        "label": "Resize to custom dimensions"
+      }
+    ]
+  },
+  {
+    "slug": "compress-photo-for-indian-visa-under-200kb",
+    "component": "compress",
+    "title": "Compress an Indian Visa Photo Under 200 KB",
+    "description": "Indian visa application forms can specify different image limits depending on the application type. Set a 200 KB JPEG target locally in your browser and check the current portal instructions for dimensions and file type.",
+    "keywords": [
+      "compress indian visa photo 200kb",
+      "indian visa photo size",
+      "visa photo under 200kb"
+    ],
+    "audience": "Indian visa applicants",
+    "target": {
+      "maxKB": 200,
+      "format": "jpg"
+    },
+    "preset": {
+      "targetKB": 200,
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: use the pixel dimensions shown by the current Indian visa form for your application.",
+      "Accepted formats: JPEG is broadly compatible; confirm the portal's allowed file types.",
+      "Recommended DPI: online submissions are checked by pixels; use 300 DPI for print preparation only."
+    ],
+    "related": [
+      {
+        "href": "/resize-image-for-passport",
+        "label": "Resize an identity photo"
+      },
+      {
+        "href": "/convert-image",
+        "label": "Convert a photo to JPG"
+      }
+    ]
+  },
+  {
+    "slug": "compress-photo-for-college-portal-under-50kb",
+    "component": "compress",
+    "title": "Compress a Photo Under 50 KB for a College Portal",
+    "description": "Some college admission forms impose small photo limits that differ by institution and application year. Set a 50 KB JPEG target locally in your browser and confirm your portal's size, dimension, and format rules.",
+    "keywords": [
+      "compress college admission photo 50kb",
+      "college portal photo size",
+      "photo under 50kb"
+    ],
+    "audience": "Students completing college applications",
+    "target": {
+      "maxKB": 50,
+      "format": "jpg"
+    },
+    "preset": {
+      "targetKB": 50,
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: enter the exact pixel size from the institution's application form.",
+      "Accepted formats: JPEG is widely accepted, but some portals request PNG; check before converting.",
+      "Recommended DPI: upload forms use pixel dimensions; 300 DPI matters only for a printed photo."
+    ],
+    "related": [
+      {
+        "href": "/resize-image",
+        "label": "Resize a photo to exact pixels"
+      },
+      {
+        "href": "/convert-image",
+        "label": "Convert an image format"
+      }
+    ]
+  },
+  {
+    "slug": "compress-image-for-discord-under-8mb",
+    "component": "compress",
+    "title": "Compress an Image Under 8 MB for Discord",
+    "description": "Discord's upload cap can vary with account features, server settings, and product changes. Compress locally to an 8 MB JPEG target and check the limit shown in your client.",
+    "keywords": [
+      "compress image for discord 8mb",
+      "discord image size limit",
+      "reduce image size discord"
+    ],
+    "audience": "Discord users",
+    "target": {
+      "maxKB": 8000,
+      "format": "jpg"
+    },
+    "preset": {
+      "targetKB": 8000,
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: Discord's display and upload dimensions vary; retain the size needed for clear viewing.",
+      "Accepted formats: JPEG and PNG are common; this preset exports JPEG and removes transparency.",
+      "Recommended DPI: DPI does not control screen display; optimize pixel dimensions for the channel."
+    ],
+    "related": [
+      {
+        "href": "/compress-image",
+        "label": "Set a custom image size limit"
+      },
+      {
+        "href": "/convert-image",
+        "label": "Convert PNG or WebP to JPG"
+      }
+    ]
+  },
+  {
+    "slug": "compress-image-for-email-under-20mb",
+    "component": "compress",
+    "title": "Compress an Image Under 20 MB for Email",
+    "description": "Email attachment caps vary by provider, and encoding can increase the size of an attachment in transit. Compress locally to a 20 MB JPEG target and check the recipient's mail service limit before sending.",
+    "keywords": [
+      "compress image for email 20mb",
+      "email attachment image limit",
+      "reduce photo for email"
+    ],
+    "audience": "People sending image attachments by email",
+    "target": {
+      "maxKB": 20000,
+      "format": "jpg"
+    },
+    "preset": {
+      "targetKB": 20000,
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: choose dimensions suitable for the recipient; no universal email image pixel limit exists.",
+      "Accepted formats: JPEG is widely supported; confirm the recipient's service and attachment policy.",
+      "Recommended DPI: email viewing is screen-based; use pixel dimensions, not DPI metadata, to manage size."
+    ],
+    "related": [
+      {
+        "href": "/compress-image",
+        "label": "Compress to a custom email limit"
+      },
+      {
+        "href": "/resize-image",
+        "label": "Resize a large image before sending"
+      }
+    ]
+  },
+  {
+    "slug": "convert-image/jpg-to-png",
+    "component": "convert",
+    "sourceFormat": "jpg",
+    "title": "Convert JPG to PNG",
+    "description": "Convert a JPG when an editor or upload form specifically requires PNG. This browser-based converter preserves the image dimensions, but it cannot restore detail already lost in JPG compression.",
+    "keywords": [
+      "convert jpg to png",
+      "jpg to png converter",
+      "jpeg to png online"
+    ],
+    "audience": "People preparing images for editors and upload forms",
+    "target": {
+      "format": "png"
+    },
+    "preset": {
+      "format": "png"
+    },
+    "requirements": [
+      "Max dimensions: output keeps the source pixel dimensions; resize separately if a portal has a limit.",
+      "Accepted formats: JPG input and PNG output; choose PNG only when the receiving service accepts it.",
+      "Recommended DPI: conversion preserves pixel dimensions; DPI metadata is not a screen-resolution setting."
+    ],
+    "related": [
+      {
+        "href": "/resize-image",
+        "label": "Resize the image"
+      },
+      {
+        "href": "/compress-image",
+        "label": "Reduce image file size"
+      }
+    ]
+  },
+  {
+    "slug": "convert-image/jpg-to-webp",
+    "component": "convert",
+    "sourceFormat": "jpg",
+    "title": "Convert JPG to WebP for the Web",
+    "description": "WebP can reduce image payloads for sites that support the format. Convert a JPG locally, then compare the output quality and size before replacing a production asset.",
+    "keywords": [
+      "convert jpg to webp",
+      "jpg to webp converter",
+      "webp for website"
+    ],
+    "audience": "Web publishers and site owners",
+    "target": {
+      "format": "webp"
+    },
+    "preset": {
+      "format": "webp"
+    },
+    "requirements": [
+      "Max dimensions: keep the source dimensions or resize to the actual rendered size on your page.",
+      "Accepted formats: JPG input and WebP output; verify support in the browsers and CMS you target.",
+      "Recommended DPI: DPI does not affect browser display; use enough pixels for the rendered size and device density."
+    ],
+    "related": [
+      {
+        "href": "/resize-image",
+        "label": "Resize for a page layout"
+      },
+      {
+        "href": "/compress-image",
+        "label": "Compress a JPG before publishing"
+      }
+    ]
+  },
+  {
+    "slug": "convert-image/png-to-jpg",
+    "component": "convert",
+    "sourceFormat": "png",
+    "title": "Convert PNG to JPG for Uploads",
+    "description": "Convert a PNG locally in your browser when an upload form accepts JPG but not PNG. The output uses a white background where the source has transparency, so check the preview before submitting.",
+    "keywords": [
+      "convert png to jpg",
+      "png to jpg converter",
+      "png upload jpg"
+    ],
+    "audience": "People preparing photos for upload forms",
+    "target": {
+      "format": "jpg"
+    },
+    "preset": {
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: output keeps the source pixel dimensions; resize separately to meet a portal limit.",
+      "Accepted formats: PNG input and JPEG output; transparency becomes a white background.",
+      "Recommended DPI: online forms use pixels rather than DPI; preserve enough pixels for the required display size."
+    ],
+    "related": [
+      {
+        "href": "/compress-image-under-200kb",
+        "label": "Compress for an upload size limit"
+      },
+      {
+        "href": "/resize-image",
+        "label": "Resize the output"
+      }
+    ]
+  },
+  {
+    "slug": "convert-image/png-to-webp",
+    "component": "convert",
+    "sourceFormat": "png",
+    "title": "Convert PNG to WebP for Faster Websites",
+    "description": "WebP can preserve transparency while reducing many web image payloads compared with PNG. Convert locally and check visual quality, file size, and your site's browser support before publishing.",
+    "keywords": [
+      "convert png to webp",
+      "png to webp converter",
+      "optimize png for website"
+    ],
+    "audience": "Web publishers and site owners",
+    "target": {
+      "format": "webp"
+    },
+    "preset": {
+      "format": "webp"
+    },
+    "requirements": [
+      "Max dimensions: resize to the rendered component size; avoid serving unnecessary source pixels.",
+      "Accepted formats: PNG input and WebP output; WebP supports transparency in modern browsers.",
+      "Recommended DPI: DPI is not used for browser rendering; optimize pixel dimensions for screen density."
+    ],
+    "related": [
+      {
+        "href": "/resize-image",
+        "label": "Resize for the web"
+      },
+      {
+        "href": "/compress-image",
+        "label": "Compress a photo for upload"
+      }
+    ]
+  },
+  {
+    "slug": "convert-image/webp-to-jpg",
+    "component": "convert",
+    "sourceFormat": "webp",
+    "title": "Convert WebP to JPG for Upload Forms",
+    "description": "Convert a WebP image when an older application or upload form requires JPG. This browser-based conversion keeps the pixel dimensions, but JPG does not retain transparency.",
+    "keywords": [
+      "convert webp to jpg",
+      "webp to jpg converter",
+      "webp upload jpg"
+    ],
+    "audience": "People preparing WebP images for uploads",
+    "target": {
+      "format": "jpg"
+    },
+    "preset": {
+      "format": "jpg"
+    },
+    "requirements": [
+      "Max dimensions: output keeps the source pixel dimensions; check the receiving form for limits.",
+      "Accepted formats: static WebP input and JPEG output; transparent areas become a white background.",
+      "Recommended DPI: online forms validate pixel dimensions, not DPI metadata."
+    ],
+    "related": [
+      {
+        "href": "/compress-image-under-200kb",
+        "label": "Compress for an upload cap"
+      },
+      {
+        "href": "/resize-image",
+        "label": "Resize to required pixels"
+      }
+    ]
+  },
+  {
+    "slug": "convert-image/webp-to-png",
+    "component": "convert",
+    "sourceFormat": "webp",
+    "title": "Convert WebP to PNG",
+    "description": "Convert a WebP when an editor or upload workflow requires PNG. The output keeps the source dimensions and supports transparency, but conversion cannot restore detail absent from the source.",
+    "keywords": [
+      "convert webp to png",
+      "webp to png converter",
+      "webp png online"
+    ],
+    "audience": "People preparing images for editors and upload forms",
+    "target": {
+      "format": "png"
+    },
+    "preset": {
+      "format": "png"
+    },
+    "requirements": [
+      "Max dimensions: output keeps the source pixel dimensions; resize separately if needed.",
+      "Accepted formats: static WebP input and PNG output; animated WebP is not supported.",
+      "Recommended DPI: DPI is not a screen-resolution setting; use the pixel dimensions required by your workflow."
+    ],
+    "related": [
+      {
+        "href": "/resize-image",
+        "label": "Resize the image"
+      },
+      {
+        "href": "/compress-image",
+        "label": "Compress a photo for upload"
+      }
+    ]
+  }
+]

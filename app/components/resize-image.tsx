@@ -20,13 +20,13 @@ import {
 type Result = { blob: Blob; url: string; width: number; height: number };
 const supportedTypes = ["image/jpeg", "image/png", "image/webp"];
 
-export default function ResizeImage({ title, introCopy, initialWidth, initialHeight, initialFormat, initialQuality, extraContent }: { title?: string; introCopy?: string; initialWidth?: number; initialHeight?: number; initialFormat?: "jpg" | "png"; initialQuality?: number; extraContent?: React.ReactNode }) {
+export default function ResizeImage({ title, introCopy, initialWidth, initialHeight, initialFormat, initialQuality, selectImageLabel, actionLabel, extraContent }: { title?: string; introCopy?: string; initialWidth?: number; initialHeight?: number; initialFormat?: "jpg" | "png"; initialQuality?: number; selectImageLabel?: string; actionLabel?: string; extraContent?: React.ReactNode }) {
   const [file, setFile] = useState<File | null>(null);
   const [source, setSource] = useState<ImageInfo | null>(null);
-  const [mode, setMode] = useState<"percent" | "pixels">("percent");
+  const [mode, setMode] = useState<"percent" | "pixels">(initialWidth && initialHeight ? "pixels" : "percent");
   const [percent, setPercent] = useState("50");
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
+  const [width, setWidth] = useState(initialWidth?.toString() ?? "");
+  const [height, setHeight] = useState(initialHeight?.toString() ?? "");
   const [lock, setLock] = useState(true);
   const [format, setFormat] = useState<"jpg" | "png">(initialFormat === "png" ? "png" : "jpg");
   const [quality, setQuality] = useState(initialQuality ?? 90);
@@ -239,7 +239,7 @@ export default function ResizeImage({ title, introCopy, initialWidth, initialHei
                   </label>
                 </div>
               ) : (
-                <FileDrop inputId="resize-file" accept={supportedTypes.join(",")} onFile={chooseFile} busy={busy} />
+                <FileDrop inputId="resize-file" accept={supportedTypes.join(",")} onFile={chooseFile} busy={busy} selectImageLabel={selectImageLabel} />
               )}
 
               <div className="controls">
@@ -287,7 +287,7 @@ export default function ResizeImage({ title, introCopy, initialWidth, initialHei
                     </div>
                   )}
                   <button className="primary-button resize-generate" type="button" onClick={generate} disabled={busy || !file}>
-                    {busy ? "Resizing..." : "Resize image"}
+                    {busy ? "Resizing..." : actionLabel ?? "Resize image"}
                   </button>
                   {busy && (
                     <button className="secondary-button" type="button" onClick={() => abortRef.current?.abort()} style={{ marginTop: 8, width: "100%" }}>

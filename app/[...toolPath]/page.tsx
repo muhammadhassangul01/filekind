@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import CompressPdf from "@/app/components/compress-pdf";
 import ImageCompressor from "@/app/components/image-compressor";
@@ -10,19 +11,26 @@ import PdfToImages from "@/app/components/pdf-to-images";
 import ResizeImage from "@/app/components/resize-image";
 import RotatePdf from "@/app/components/rotate-pdf";
 import SplitPdf from "@/app/components/split-pdf";
+import { getUseCaseByPath, useCases, type UseCase } from "@/lib/use-cases";
 import { getNicheToolByPath, nicheTools, type NicheTool } from "@/lib/niche-tools";
 import { absoluteUrl, faqSchema, pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
 export function generateStaticParams() {
-  return nicheTools.map((tool) => ({ toolPath: tool.path }));
+  return [
+    ...nicheTools.map((tool) => ({ toolPath: tool.path })),
+    ...useCases.map((useCase) => ({ toolPath: useCase.path })),
+  ];
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ toolPath: string[] }> }): Promise<Metadata> {
-  const tool = getNicheToolByPath((await params).toolPath);
-  if (!tool) return {};
-  return pageMetadata({ title: tool.title, description: tool.description, path: `/${tool.path.join("/")}`, keywords: tool.keywords });
+  const path = (await params).toolPath;
+  const tool = getNicheToolByPath(path);
+  const useCase = getUseCaseByPath(path);
+  const page = tool ?? useCase;
+  if (!page) return {};
+  return pageMetadata({ title: page.title, description: page.description, path: `/${page.path.join("/")}`, keywords: page.keywords });
 }
 
 function CatalogContent({ tool }: { tool: NicheTool }) {
@@ -66,9 +74,84 @@ function ToolBody({ tool }: { tool: NicheTool }) {
   }
 }
 
+function UseCaseDetails({ useCase }: { useCase: UseCase }) {
+  return (
+    <>
+      <section className="info-panel seo-content use-case-requirements" aria-labelledby="use-case-requirements-heading">
+        <h2 id="use-case-requirements-heading">Quick requirements reference</h2>
+        <ul>{useCase.requirements.map((requirement) => <li key={requirement}>{requirement}</li>)}</ul>
+      </section>
+      <section className="info-panel seo-content use-case-related" aria-labelledby="use-case-related-heading">
+        <h2 id="use-case-related-heading">Related tools</h2>
+        <ul className="tool-links">
+          {useCase.related.map((link) => <li key={link.href}><Link href={link.href}>{link.label}</Link></li>)}
+        </ul>
+      </section>
+    </>
+  );
+}
+
+function UseCaseBody({ useCase }: { useCase: UseCase }) {
+  const extraContent = <UseCaseDetails useCase={useCase} />;
+  const selectImageLabel = "Select Image";
+
+  switch (useCase.component) {
+    case "compress":
+      return <ImageCompressor
+        title={useCase.title}
+        introCopy={useCase.description}
+        initialTargetKB={useCase.preset.targetKB}
+        selectImageLabel={selectImageLabel}
+        actionLabel="Compress Now"
+        extraContent={extraContent}
+      />;
+    case "resize":
+      return <ResizeImage
+        title={useCase.title}
+        introCopy={useCase.description}
+        initialWidth={useCase.preset.width}
+        initialHeight={useCase.preset.height}
+        initialFormat={useCase.preset.format === "png" ? "png" : "jpg"}
+        initialQuality={useCase.preset.quality}
+        selectImageLabel={selectImageLabel}
+        actionLabel="Resize Now"
+        extraContent={extraContent}
+      />;
+    case "convert":
+      return <ImageConverter
+        from={useCase.sourceFormat}
+        to={useCase.preset.format}
+        title={useCase.title}
+        introCopy={useCase.description}
+        selectImageLabel={selectImageLabel}
+        actionLabel="Convert Now"
+        extraContent={extraContent}
+      />;
+  }
+}
+
 export default async function CatalogToolPage({ params }: { params: Promise<{ toolPath: string[] }> }) {
-  const tool = getNicheToolByPath((await params).toolPath);
-  if (!tool) notFound();
-  const schema = schemaFor(tool);
-  return <><JsonLd data={schema.webApplication} /><JsonLd data={schema.faqPage} /><ToolBody tool={tool} /></>;
+  const path = (await params).toolPath;
+  const tool = getNicheToolByPath(path);
+  if (tool) {
+    const schema = schemaFor(tool);
+    return <><JsonLd data={schema.webApplication} /><JsonLd data={schema.faqPage} /><ToolBody tool={tool} /></>;
+  }
+
+  const useCase = getUseCaseByPath(path);
+  if (!useCase) notFound();
+  return <>
+    <JsonLd data={{
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: useCase.title,
+      description: useCase.description,
+      url: absoluteUrl(`/${useCase.path.join("/")}`),
+      applicationCategory: "UtilitiesApplication",
+      operatingSystem: "Any",
+      browserRequirements: "Requires JavaScript and a modern browser",
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    }} />
+    <UseCaseBody useCase={useCase} />
+  </>;
 }

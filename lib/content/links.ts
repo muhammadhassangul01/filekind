@@ -13,11 +13,6 @@ export const toolLinks: SiteLink[] = [
   { href: "/split-pdf", label: "Split PDF" },
   { href: "/compress-pdf", label: "Compress PDF" },
   { href: "/rotate-pdf", label: "Rotate PDF" },
-  { href: "/jpg-to-pdf", label: "JPG to PDF" },
-  { href: "/png-to-pdf", label: "PNG to PDF" },
-  { href: "/webp-to-pdf", label: "WebP to PDF" },
-  { href: "/pdf-to-jpg", label: "PDF to JPG" },
-  { href: "/pdf-to-png", label: "PDF to PNG" },
 ];
 
 export const converterLinks: SiteLink[] = [
@@ -153,7 +148,7 @@ export const contentPaths: string[] = [
 
 const imageToolHrefs = new Set(["/compress-image", "/resize-image", "/convert-image", "/images-to-pdf", "/pdf-to-images"]);
 const pdfEditHrefs = new Set(["/merge-pdf", "/split-pdf", "/compress-pdf", "/rotate-pdf"]);
-const pdfVariantHrefs = new Set(["/jpg-to-pdf", "/png-to-pdf", "/webp-to-pdf", "/pdf-to-jpg", "/pdf-to-png"]);
+const pdfToolHrefs = new Set([...pdfEditHrefs, "/images-to-pdf", "/pdf-to-images"]);
 
 export const footerColumns: { heading: string; links: SiteLink[] }[] = [
   {
@@ -162,7 +157,7 @@ export const footerColumns: { heading: string; links: SiteLink[] }[] = [
   },
   {
     heading: "PDF tools",
-    links: [...toolLinks.filter((link) => pdfEditHrefs.has(link.href) || pdfVariantHrefs.has(link.href))],
+    links: [...toolLinks.filter((link) => pdfToolHrefs.has(link.href))],
   },
   {
     heading: "Learn",
