@@ -27,6 +27,7 @@ export default function SiteFooter() {
           <span>© 2026 Filekind</span>
           <Link href="/about">About</Link>
           <Link href="/privacy">Privacy</Link>
+          <Link href="/analytics">Analytics</Link>
           <Link href="/directory">Site directory</Link>
           <Link href="/glossary">Glossary</Link>
           <Link href="/compare">Comparisons</Link>

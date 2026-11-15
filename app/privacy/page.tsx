@@ -57,18 +57,19 @@ export default function PrivacyPage() {
           <section className="article-section" aria-labelledby="analytics">
             <h2 id="analytics">Limited anonymous analytics</h2>
             <p>
-              To learn which tools are useful, Filekind sends a small usage event for a limited set of public pages:
-              the normalised page path and, for a subset of pages, a normalised button or link label. Events are
-              grouped by UTC day and by country in aggregate.
+              To understand which tools are useful, Filekind sends aggregate page-view and interaction counts for
+              public pages. The event includes a normalised page path and a generic interaction type such as a
+              button click, file selection, form-control change, or internal link. It never includes the text you
+              enter, a file name, or the URL query string. Counts are grouped by UTC day and country.
             </p>
             <ul>
               <li>No cookies are set and no advertising or tracking scripts are loaded.</li>
-              <li>Raw IP addresses, filenames, file contents, query strings, and fingerprints are not stored.</li>
-              <li>No persistent visitor identifiers are created, so counts are page events rather than unique people.</li>
-              <li>Aggregate rows are kept for 90 days and are then deleted.</li>
+              <li>The analytics Worker does not store raw IP addresses, filenames, file contents, query strings, or fingerprints.</li>
+              <li>No persistent visitor identifiers are created, so these are event counts rather than unique-person counts.</li>
+              <li>Aggregate rows are retained for up to 90 days and then automatically deleted.</li>
             </ul>
             <p>
-              Because the data is aggregate, it cannot be used to identify you, and it is never sold or shared with
+              The in-app analytics dashboard displays only these aggregate counts. They are never sold or shared with
               advertisers.
             </p>
           </section>

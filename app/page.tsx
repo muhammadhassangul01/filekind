@@ -8,15 +8,19 @@ import { itemListSchema, pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   description:
-    "Free browser tools to compress images to a KB limit, resize to exact pixels, convert JPG, PNG, and WebP, and build PDFs. No upload, no signup, no watermark.",
+    "Compress images to a KB limit, resize to exact pixels, convert JPG, PNG, and WebP, and create PDFs with free online tools. Your files stay on your device.",
   path: "/",
   keywords: [
     "free image tools",
     "image compressor online",
+    "compress image to 200kb",
     "convert image online",
+    "JPG to PNG converter",
     "image to pdf",
     "pdf to images",
     "resize image online",
+    "resize image to exact pixels",
+    "free PDF tools",
     "browser image tools",
   ],
 });
@@ -132,13 +136,57 @@ export default function Home() {
     <ToolLayout active="home">
       <LegacyCompressorRedirect />
       <JsonLd data={schema} />
-      <section className="home-intro">
-        <h1>Free image and PDF tools</h1>
-        <p>
-          Compress a photo to an exact KB limit, resize it to the pixels a form asks for, convert between JPG, PNG, and
-          WebP, or turn pictures into a PDF and back again. Every tool runs in your browser, so your files are never
-          uploaded.
-        </p>
+      <section className="home-hero">
+        <div className="home-hero-copy">
+          <p className="eyebrow"><span className="hero-status-dot" /> Private file tools, right in your browser</p>
+          <h1>Free image and PDF tools.<br /><span>Ready when you are.</span></h1>
+          <p className="home-hero-description">
+            Compress images to a size limit, resize to exact pixels, convert JPG, PNG, and WebP, or make PDFs from your
+            photos. No uploads, no signup, no watermark.
+          </p>
+          <div className="home-hero-actions">
+            <Link className="primary-button hero-primary-cta" href="/image-tools">Explore image tools <span aria-hidden="true">→</span></Link>
+            <Link className="hero-secondary-cta" href="/pdf-tools">Explore PDF tools <span aria-hidden="true">↗</span></Link>
+          </div>
+          <ul className="home-trust-list" aria-label="Filekind benefits">
+            <li><span aria-hidden="true">✓</span> Files stay on your device</li>
+            <li><span aria-hidden="true">✓</span> Free, with no signup</li>
+            <li><span aria-hidden="true">✓</span> Works on desktop and mobile</li>
+          </ul>
+        </div>
+        <div className="home-hero-visual" aria-hidden="true">
+          <div className="hero-window">
+            <div className="hero-window-bar"><span /><span /><span /><strong>Filekind workspace</strong></div>
+            <div className="hero-window-content">
+              <div className="hero-privacy-badge"><span /> Your files never leave this device</div>
+              <div className="hero-flow-row">
+                <span className="hero-flow-icon hero-file-icon">JPG</span>
+                <div><small>STEP 01</small><strong>Choose a file</strong><span>From your device</span></div>
+                <i>↘</i>
+              </div>
+              <div className="hero-flow-row">
+                <span className="hero-flow-icon hero-process-icon">✳</span>
+                <div><small>STEP 02</small><strong>Make it fit</strong><span>Adjust size or format</span></div>
+                <i>↘</i>
+              </div>
+              <div className="hero-flow-row hero-flow-last">
+                <span className="hero-flow-icon hero-ready-icon">✓</span>
+                <div><small>STEP 03</small><strong>Save your result</strong><span>Downloaded to your device</span></div>
+              </div>
+              <div className="hero-local-note"><span>●</span> Processed locally in your browser</div>
+            </div>
+          </div>
+          <div className="hero-orbit hero-orbit-one" />
+          <div className="hero-orbit hero-orbit-two" />
+        </div>
+      </section>
+
+      <section className="home-tool-section" aria-labelledby="home-tools-title">
+        <div className="home-section-heading">
+          <div><p className="eyebrow">The essentials</p><h2 id="home-tools-title">Get your file ready in a few clicks</h2></div>
+          <Link href="/image-tools" className="home-view-all">All tools <span aria-hidden="true">→</span></Link>
+        </div>
+        <p className="home-section-intro">Practical, browser-based tools for the image and PDF jobs that slow you down.</p>
       </section>
 
       <section className="home-tools" aria-label="Filekind tools">
@@ -159,7 +207,8 @@ export default function Home() {
       </section>
 
       <section className="home-section" aria-labelledby="home-featured">
-        <h2 id="home-featured">Everyday document tasks</h2>
+        <p className="eyebrow">Made for everyday work</p>
+        <h2 id="home-featured">The file tools you need, without the fuss</h2>
         <p>Six tasks people arrive with, each one handled by a tool that keeps your files on this device.</p>
         <div className="feature-grid">
           {featureCards.map((card) => (
@@ -178,7 +227,9 @@ export default function Home() {
       </section>
 
       <section className="home-section" aria-labelledby="home-converters">
-        <h2 id="home-converters">Convert any format pair</h2>
+        <p className="eyebrow">Quick conversions</p>
+        <h2 id="home-converters">Convert JPG, PNG, and WebP</h2>
+        <p>Choose the format you need and convert right in your browser—without sending the original image anywhere.</p>
         <p className="tool-links">
           {converterLinks.map((link, index) => (
             <span key={link.href}>
@@ -190,7 +241,9 @@ export default function Home() {
       </section>
 
       <section className="home-section" aria-labelledby="home-tasks">
-        <h2 id="home-tasks">Start from your task</h2>
+        <p className="eyebrow">Guides and use cases</p>
+        <h2 id="home-tasks">Find the right tool for your task</h2>
+        <p>Step-by-step guides explain common image and PDF requirements, from file-size limits to exact dimensions.</p>
         <ul className="home-task-list">
           {taskLinks.map((link) => (
             <li key={link.href}>
@@ -206,12 +259,14 @@ export default function Home() {
       </section>
 
       <section className="home-section" aria-labelledby="home-limits">
-        <h2 id="home-limits">What is supported</h2>
+        <p className="eyebrow">Built for privacy</p>
+        <h2 id="home-limits">Your files stay yours</h2>
         <p>
-          Images up to 25 MB, 16,000 pixels per side, and 48 megapixels. PDFs up to 50 MB and 100 pages. JPEG, PNG, and
-          static WebP are supported for conversion, compression, resizing, and PDF creation. Animated WebP and
-          password-protected PDFs are rejected rather than handled incorrectly.
+          Image and PDF processing happens on your device. Images can be up to 25 MB, 16,000 pixels per side, and 48
+          megapixels; PDFs can be up to 50 MB and 100 pages. JPEG, PNG, and static WebP are supported for image tools.
+          Animated WebP and password-protected PDFs are rejected instead of being handled incorrectly.
         </p>
+        <p>There is no account, upload queue, or file history. Close the tab and your working files are gone.</p>
         <p className="tool-links">
           <Link href="/about">About Filekind</Link> · <Link href="/privacy">Privacy</Link> ·{" "}
           <Link href="/directory">Site directory</Link>
@@ -229,7 +284,7 @@ export default function Home() {
       </section>
 
       <p className="home-note">
-        No signup. Limited anonymous page-view analytics help us understand which tools are useful.
+        No signup. Anonymous, aggregate usage counts help us improve the tools; no file data is ever collected.
       </p>
     </ToolLayout>
   );

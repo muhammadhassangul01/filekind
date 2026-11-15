@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { contentPaths } from "@/lib/content";
 import { SITE_URL } from "@/lib/seo";
 import { nicheTools } from "@/lib/niche-tools";
 import { useCases } from "@/lib/use-cases";
@@ -31,5 +32,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  return [home, ...coreToolEntries, ...useCaseEntries];
+  const contentEntries: MetadataRoute.Sitemap = contentPaths.map((path) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified: new Date(),
+    changeFrequency: weekly,
+    priority: 0.7,
+  }));
+  const uniqueEntries = new Map(
+    [home, ...coreToolEntries, ...useCaseEntries, ...contentEntries].map((entry) => [entry.url, entry]),
+  );
+
+  return [...uniqueEntries.values()];
 }
