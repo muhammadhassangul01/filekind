@@ -4,19 +4,11 @@ import ToolLayout from "../components/tool-layout";
 import JsonLd from "../components/json-ld";
 import { guideLinks, toolLinks } from "@/lib/content";
 import { itemListSchema, pageMetadata, webpageSchema } from "@/lib/seo";
+import ToolIcon from "../components/tool-icon";
 
 const pdfTools = toolLinks.filter((link) =>
   ["/images-to-pdf", "/pdf-to-images", "/merge-pdf", "/split-pdf", "/compress-pdf", "/rotate-pdf"].includes(link.href),
 );
-
-const pdfToolNotes: Record<string, string> = {
-  "/merge-pdf": "Join up to 20 documents in the order you choose.",
-  "/split-pdf": "Keep selected pages or save each page on its own.",
-  "/compress-pdf": "Three levels, with text left selectable.",
-  "/rotate-pdf": "Turn single pages or the whole document.",
-  "/images-to-pdf": "Turn receipts, notes, and snapshots into one PDF.",
-  "/pdf-to-images": "Save pages as JPG or PNG, one at a time or as a ZIP.",
-};
 
 const faqs = [
   {
@@ -37,7 +29,7 @@ const faqs = [
   {
     question: "How large can a PDF be?",
     answer:
-      "Reading a PDF is limited to 50 MB and 100 pages, with 150 MB of total rendered output. Images added to a PDF can be up to 25 MB each.",
+      "Large PDFs are processed locally where your browser has enough memory. Very large documents or unusually long files may still be limited by the device running the tool.",
   },
 ];
 
@@ -80,10 +72,6 @@ export default function PdfToolsHubPage() {
       <section className="intro">
         <p className="eyebrow">Toolkit</p>
         <h1>Free online PDF tools</h1>
-        <p className="intro-copy">
-          Build a PDF from photos, join separate documents, pull pages out, turn them, shrink them, or render them as
-          images. Everything happens in your browser, so documents stay private.
-        </p>
       </section>
 
       <section className="hub-group" aria-labelledby="pdf-tool-list">
@@ -91,10 +79,9 @@ export default function PdfToolsHubPage() {
         <div className="home-tools">
           {pdfTools.map((link) => (
             <Link className="home-tool-card" href={link.href} key={link.href}>
-              <span className="home-tool-icon" aria-hidden="true">{link.label.split(" ")[0].slice(0, 3).toUpperCase()}</span>
+              <ToolIcon href={link.href} />
               <span>
                 <strong>{link.label}</strong>
-                <span>{pdfToolNotes[link.href] ?? "Runs in your browser with no upload."}</span>
               </span>
               <span className="home-tool-arrow" aria-hidden="true">→</span>
             </Link>

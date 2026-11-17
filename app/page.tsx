@@ -5,6 +5,8 @@ import LegacyCompressorRedirect from "./components/legacy-compressor-redirect";
 import JsonLd from "./components/json-ld";
 import { converterLinks, guideLinks, toolLinks } from "@/lib/content";
 import { itemListSchema, pageMetadata } from "@/lib/seo";
+import ToolIcon from "./components/tool-icon";
+import FormatPairIcon from "./components/format-pair-icon";
 
 export const metadata: Metadata = pageMetadata({
   description:
@@ -25,16 +27,7 @@ export const metadata: Metadata = pageMetadata({
   ],
 });
 
-const mainTools = toolLinks.slice(0, 6);
-
-const toolSummaries: Record<string, string> = {
-  "/compress-image": "Reduce a JPEG or PNG to a custom KB or MB limit.",
-  "/resize-image": "Set exact pixels or a percentage with the ratio locked.",
-  "/convert-image": "Switch between JPG, PNG, and static WebP.",
-  "/images-to-pdf": "Arrange your images and download them as a PDF.",
-  "/pdf-to-images": "Turn PDF pages into JPG or PNG images.",
-  "/merge-pdf": "Join separate PDFs in the order you choose.",
-};
+const mainTools = toolLinks.slice(0, 9);
 
 const featureCards = [
   {
@@ -141,8 +134,7 @@ export default function Home() {
           <p className="eyebrow"><span className="hero-status-dot" /> Private file tools, right in your browser</p>
           <h1>Free image and PDF tools.<br /><span>Ready when you are.</span></h1>
           <p className="home-hero-description">
-            Compress images to a size limit, resize to exact pixels, convert JPG, PNG, and WebP, or make PDFs from your
-            photos. No uploads, no signup, no watermark.
+            Compress, convert, resize, and manage PDFs privately in your browser. No uploads, signup, or watermark.
           </p>
           <div className="home-hero-actions">
             <Link className="primary-button hero-primary-cta" href="/image-tools">Explore image tools <span aria-hidden="true">→</span></Link>
@@ -183,21 +175,17 @@ export default function Home() {
 
       <section className="home-tool-section" aria-labelledby="home-tools-title">
         <div className="home-section-heading">
-          <div><p className="eyebrow">The essentials</p><h2 id="home-tools-title">Get your file ready in a few clicks</h2></div>
+          <div><p className="eyebrow">The essentials · 9 core tools</p><h2 id="home-tools-title">Everything you need to fix a file</h2></div>
           <Link href="/image-tools" className="home-view-all">All tools <span aria-hidden="true">→</span></Link>
         </div>
-        <p className="home-section-intro">Practical, browser-based tools for the image and PDF jobs that slow you down.</p>
       </section>
 
       <section className="home-tools" aria-label="Filekind tools">
         {mainTools.map((link) => (
           <Link className="home-tool-card" href={link.href} key={link.href}>
-            <span className="home-tool-icon" aria-hidden="true">
-              {link.label.split(" ")[0].slice(0, 3).toUpperCase()}
-            </span>
+            <ToolIcon href={link.href} />
             <span>
               <strong>{link.label}</strong>
-              <span>{toolSummaries[link.href] ?? "Runs in your browser with no upload."}</span>
             </span>
             <span className="home-tool-arrow" aria-hidden="true">
               →
@@ -206,21 +194,21 @@ export default function Home() {
         ))}
       </section>
 
+      <section className="home-proof" aria-label="Why use Filekind">
+        <div><strong>100%</strong><span>in your browser</span></div>
+        <div><strong>0 uploads</strong><span>your files stay private</span></div>
+        <div><strong>Free</strong><span>no account or watermark</span></div>
+      </section>
+
       <section className="home-section" aria-labelledby="home-featured">
         <p className="eyebrow">Made for everyday work</p>
-        <h2 id="home-featured">The file tools you need, without the fuss</h2>
-        <p>Six tasks people arrive with, each one handled by a tool that keeps your files on this device.</p>
+        <h2 id="home-featured">Popular workflows</h2>
         <div className="feature-grid">
           {featureCards.map((card) => (
             <Link className="feature-card" href={card.href} key={card.href}>
-              <span className="feature-eyebrow">{card.eyebrow}</span>
+              <ToolIcon href={card.href} />
               <strong className="feature-title">{card.title}</strong>
-              <span className="feature-description">{card.description}</span>
-              <span className="feature-meta">{card.meta}</span>
-              <span className="feature-cta">
-                {card.cta}
-                <i aria-hidden="true">↗</i>
-              </span>
+              <span className="feature-cta" aria-hidden="true">↗</span>
             </Link>
           ))}
         </div>
@@ -229,23 +217,19 @@ export default function Home() {
       <section className="home-section" aria-labelledby="home-converters">
         <p className="eyebrow">Quick conversions</p>
         <h2 id="home-converters">Convert JPG, PNG, and WebP</h2>
-        <p>Choose the format you need and convert right in your browser—without sending the original image anywhere.</p>
-        <p className="tool-links">
-          {converterLinks.map((link, index) => (
-            <span key={link.href}>
-              <Link href={link.href}>{link.label}</Link>
-              {index < converterLinks.length - 1 ? " · " : ""}
-            </span>
-          ))}
-        </p>
+        <div className="format-pair-grid">
+          {converterLinks.map((link) => {
+            const [from, to] = link.label.split(" to ");
+            return <FormatPairIcon href={link.href} from={from} to={to} key={link.href} />;
+          })}
+        </div>
       </section>
 
       <section className="home-section" aria-labelledby="home-tasks">
         <p className="eyebrow">Guides and use cases</p>
-        <h2 id="home-tasks">Find the right tool for your task</h2>
-        <p>Step-by-step guides explain common image and PDF requirements, from file-size limits to exact dimensions.</p>
+        <h2 id="home-tasks">Need help choosing?</h2>
         <ul className="home-task-list">
-          {taskLinks.map((link) => (
+          {taskLinks.slice(0, 4).map((link) => (
             <li key={link.href}>
               <Link href={link.href}>{link.label}</Link>
             </li>
@@ -258,18 +242,11 @@ export default function Home() {
         </p>
       </section>
 
-      <section className="home-section" aria-labelledby="home-limits">
-        <p className="eyebrow">Built for privacy</p>
-        <h2 id="home-limits">Your files stay yours</h2>
-        <p>
-          Image and PDF processing happens on your device. Images can be up to 25 MB, 16,000 pixels per side, and 48
-          megapixels; PDFs can be up to 50 MB and 100 pages. JPEG, PNG, and static WebP are supported for image tools.
-          Animated WebP and password-protected PDFs are rejected instead of being handled incorrectly.
-        </p>
-        <p>There is no account, upload queue, or file history. Close the tab and your working files are gone.</p>
+      <section className="home-section home-privacy" aria-labelledby="home-limits">
+        <p className="eyebrow">Private by default</p>
+        <h2 id="home-limits">Your files stay on your device</h2>
         <p className="tool-links">
-          <Link href="/about">About Filekind</Link> · <Link href="/privacy">Privacy</Link> ·{" "}
-          <Link href="/directory">Site directory</Link>
+          <Link href="/about">How it works</Link> · <Link href="/privacy">Privacy</Link> · <Link href="/directory">All pages</Link>
         </p>
       </section>
 

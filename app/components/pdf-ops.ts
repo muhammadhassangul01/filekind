@@ -1,7 +1,7 @@
 export const PDF_LIMITS = {
-  inputBytes: 50_000_000,
+  inputBytes: Number.POSITIVE_INFINITY,
   pages: 100,
-  outputBytes: 150_000_000,
+  outputBytes: Number.POSITIVE_INFINITY,
   files: 20,
   previewPixels: 60_000_000,
 };
@@ -12,12 +12,7 @@ export function pdfFileRejection(file: File): string | null {
   const looksLikePdf = file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
   if (!looksLikePdf) return "Choose a PDF file.";
   if (file.size === 0) return "That file is empty. Choose a different PDF.";
-  if (file.size > PDF_LIMITS.inputBytes) return `This PDF is larger than the ${formatMb(PDF_LIMITS.inputBytes)} supported limit.`;
   return null;
-}
-
-export function formatMb(bytes: number): string {
-  return `${(bytes / 1_000_000).toFixed(0)} MB`;
 }
 
 export async function readPdfBytes(file: File): Promise<Uint8Array> {

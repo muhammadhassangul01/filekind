@@ -58,8 +58,8 @@ export default function AboutPage() {
             </p>
             <p>
               That design has two consequences worth knowing. First, private documents and photos stay private.
-              Second, very large files depend on your device memory, which is why the site publishes conservative
-              limits: 25 MB and 16,000 pixels per side for images, 50 MB and 100 pages for PDFs.
+              Second, very large files depend on your device memory. Filekind does not impose an artificial byte-size
+              limit, while images over 2,000,000 pixels on either side are rejected to protect browser canvases.
             </p>
           </section>
 

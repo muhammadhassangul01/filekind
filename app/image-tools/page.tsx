@@ -3,6 +3,9 @@ import Link from "next/link";
 import ToolLayout from "../components/tool-layout";
 import JsonLd from "../components/json-ld";
 import { converterLinks, guideLinks, toolLinks } from "@/lib/content";
+import { extraTools } from "@/lib/extra-tools";
+import ToolIcon from "../components/tool-icon";
+import FormatPairIcon from "../components/format-pair-icon";
 import { itemListSchema, pageMetadata, webpageSchema } from "@/lib/seo";
 
 const faqs = [
@@ -24,7 +27,7 @@ const faqs = [
   {
     question: "What are the limits?",
     answer:
-      "Images are limited to 25 MB, 16,000 pixels per side, and 48 megapixels. Those limits keep unusually large photos bounded while still covering high-resolution cameras.",
+      "There is no artificial file-size limit. Images over 2,000,000 pixels on either side are rejected because browser canvases cannot safely process them.",
   },
 ];
 
@@ -54,7 +57,7 @@ export default function ImageToolsHubPage() {
     }),
     itemListSchema({
       name: "Filekind image tools",
-      links: [...toolLinks.filter((link) => ["/compress-image", "/resize-image", "/convert-image", "/images-to-pdf"].includes(link.href)), ...converterLinks],
+      links: [...toolLinks.filter((link) => ["/compress-image", "/resize-image", "/convert-image", "/images-to-pdf", ...extraTools.map((tool) => `/${tool.path}`)].includes(link.href)), ...converterLinks],
     }),
     {
       "@context": "https://schema.org",
@@ -69,10 +72,6 @@ export default function ImageToolsHubPage() {
       <section className="intro">
         <p className="eyebrow">Toolkit</p>
         <h1>Online image tools that run in your browser</h1>
-        <p className="intro-copy">
-          Compress a photo to a specific KB limit, resize it to exact pixels, switch between JPG, PNG, and WebP, or
-          arrange pictures into a PDF. Nothing is uploaded, nothing is stored, and every tool is free.
-        </p>
       </section>
 
       <section className="hub-group" aria-labelledby="core-image-tools">
@@ -83,12 +82,12 @@ export default function ImageToolsHubPage() {
             { href: "/resize-image", title: "Resize image", description: "Set exact pixels or a percentage with the ratio locked." },
             { href: "/convert-image", title: "Convert image", description: "Switch between JPG, PNG, and static WebP." },
             { href: "/images-to-pdf", title: "Images to PDF", description: "Turn a set of photos into one document." },
+            ...extraTools.map((tool) => ({ href: `/${tool.path}`, title: tool.label, description: tool.description })),
           ].map((tool) => (
             <Link className="home-tool-card" href={tool.href} key={tool.href}>
-              <span className="home-tool-icon" aria-hidden="true">{tool.title.split(" ")[0].slice(0, 3).toUpperCase()}</span>
+              <ToolIcon href={tool.href} />
               <span>
                 <strong>{tool.title}</strong>
-                <span>{tool.description}</span>
               </span>
               <span className="home-tool-arrow" aria-hidden="true">→</span>
             </Link>
@@ -98,15 +97,12 @@ export default function ImageToolsHubPage() {
 
       <section className="hub-group" aria-labelledby="converter-tools">
         <h2 id="converter-tools">Converters for every format pair</h2>
-        <p className="hub-blurb">Each converter fixes the input and output format, so there is nothing to configure.</p>
-        <p className="tool-links">
-          {converterLinks.map((link, index) => (
-            <span key={link.href}>
-              <Link href={link.href}>{link.label}</Link>
-              {index < converterLinks.length - 1 ? " · " : ""}
-            </span>
-          ))}
-        </p>
+        <div className="format-pair-grid">
+          {converterLinks.map((link) => {
+            const [from, to] = link.label.split(" to ");
+            return <FormatPairIcon href={link.href} from={from} to={to} key={link.href} />;
+          })}
+        </div>
       </section>
 
       <section className="hub-group" aria-labelledby="image-tasks">

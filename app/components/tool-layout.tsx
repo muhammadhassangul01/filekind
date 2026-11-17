@@ -25,13 +25,10 @@ export type NavKey =
   | "info";
 
 const navItems = [
-  { href: "/compress-image", label: "Compress image", key: "compressor" as const, match: ["compressor"] },
-  { href: "/resize-image", label: "Resize image", key: "resize" as const, match: ["resize"] },
-  { href: "/convert-image", label: "Convert image", key: "converter" as const, match: ["converter"] },
-  { href: "/images-to-pdf", label: "Images to PDF", key: "images-pdf" as const, match: ["images-pdf"] },
-  { href: "/pdf-to-images", label: "PDF to images", key: "pdf-images" as const, match: ["pdf-images"] },
+  { href: "/image-tools", label: "Image tools", key: "info" as const, match: ["info", "compressor", "resize", "converter", "images-pdf", "pdf-images"] },
   { href: "/pdf-tools", label: "PDF tools", key: "pdf-tools" as const, match: ["pdf-tools", "merge-pdf", "split-pdf", "compress-pdf", "rotate-pdf"] },
   { href: "/guides", label: "Guides", key: "guides" as const, match: ["guides"] },
+  { href: "/about", label: "About", key: "info" as const, match: [] },
 ];
 
 const homeCrumb: Crumb = { name: "Home", href: "/" };
@@ -145,7 +142,7 @@ export function FileDrop({ accept, onFile, busy, inputId, selectImageLabel }: { 
   const prompt = <>
     <span className="upload-icon" aria-hidden="true">+</span>
     <strong>{busy ? "Working on your image..." : "Choose an image or drop it here"}</strong>
-    <span>JPEG, PNG, or static WebP, up to 25 MB</span>
+    <span>JPEG, PNG, or static WebP · up to 2,000,000 px per side</span>
   </>;
 
   if (selectImageLabel) {

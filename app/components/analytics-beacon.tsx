@@ -8,23 +8,24 @@ const analyticsEndpoint =
   "https://filekind-analytics.muhammadhassangul01.workers.dev/analytics";
 
 function normalizeEvent(value: string) {
-  const normalized = value
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-  return normalized.slice(0, 64) || "interaction";
+  const normalized = value.toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "");
+  return normalized.slice(0, 80) || "interaction";
+}
+
+function visitorId() {
+  const key = "filekind-analytics-visitor";
+  const existing = window.localStorage.getItem(key);
+  if (existing) return existing;
+  const created = crypto.randomUUID().replaceAll("-", "");
+  window.localStorage.setItem(key, created);
+  return created;
 }
 
 function isProductionSite() {
   const hostname = window.location.hostname;
   const configuredSite = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://filekind.tech").replace(/\/$/, "");
-  return (
-    hostname !== "localhost" &&
-    hostname !== "127.0.0.1" &&
-    !hostname.endsWith(".local") &&
-    window.location.origin === configuredSite
-  );
+  return hostname !== "localhost" && hostname !== "127.0.0.1" && !hostname.endsWith(".local") &&
+    window.location.origin === configuredSite;
 }
 
 export default function AnalyticsBeacon() {
@@ -32,69 +33,49 @@ export default function AnalyticsBeacon() {
   const sentPath = useRef<string | null>(null);
 
   useEffect(() => {
-    const legacyTarget = pathname === "/" && new URLSearchParams(window.location.search).has("targetKB");
-    if (legacyTarget) return;
     if (!pathname || pathname === "/admin" || pathname === "/analytics" || sentPath.current === pathname) return;
     sentPath.current = pathname;
     if (!analyticsEndpoint || !isProductionSite()) return;
 
-    const send = (event?: string) => {
-      const body = event ? { path: pathname, event } : { path: pathname };
+    const id = visitorId();
+    const startedAt = Date.now();
+    let sentDuration = false;
+    const send = (payload: Record<string, unknown>) => {
       void fetch(analyticsEndpoint, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ path: pathname, visitorId: id, ...payload }),
         keepalive: true,
       }).catch(() => undefined);
     };
+    const sendDuration = () => {
+      if (sentDuration) return;
+      const seconds = Math.round((Date.now() - startedAt) / 1000);
+      if (seconds > 0) send({ eventType: "time", durationSeconds: Math.min(seconds, 86_400) });
+      sentDuration = true;
+    };
 
-    send();
-
-    function recordControlChange(changeEvent: Event) {
-      const target = changeEvent.target;
-      if (target instanceof HTMLInputElement && target.type === "file") {
-        if (target.files?.length) send("file-selected");
-        return;
-      }
-
-      if (target instanceof HTMLSelectElement) {
-        send("selection-change");
-        return;
-      }
-
-      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) {
-        const event = target instanceof HTMLInputElement && ["checkbox", "radio"].includes(target.type)
-          ? "toggle-change"
-          : "field-change";
-        send(event);
-      }
-    }
+    send({ eventType: "page_view" });
 
     function recordClick(clickEvent: MouseEvent) {
       const target = clickEvent.target instanceof Element
         ? clickEvent.target.closest<HTMLAnchorElement | HTMLButtonElement | HTMLElement>("a, button, summary")
         : null;
       if (!target) return;
-
-      if (target instanceof HTMLAnchorElement) {
-        const url = new URL(target.href, window.location.href);
-        const event = url.origin === window.location.origin
-          ? `link-${url.pathname}`
-          : "external-link";
-        send(normalizeEvent(event));
-        return;
-      }
-
-      const event = target.dataset.analyticsEvent ??
-        (target instanceof HTMLButtonElement ? "button-click" : "faq-toggle");
-      send(normalizeEvent(event));
+      const event = target instanceof HTMLAnchorElement
+        ? (new URL(target.href, window.location.href).origin === window.location.origin
+          ? `link-${new URL(target.href, window.location.href).pathname}`
+          : "external-link")
+        : target.dataset.analyticsEvent ?? (target instanceof HTMLButtonElement ? "button-click" : "faq-toggle");
+      send({ eventType: "click", eventName: normalizeEvent(event) });
     }
 
     document.addEventListener("click", recordClick, true);
-    document.addEventListener("change", recordControlChange, true);
+    window.addEventListener("pagehide", sendDuration);
     return () => {
       document.removeEventListener("click", recordClick, true);
-      document.removeEventListener("change", recordControlChange, true);
+      window.removeEventListener("pagehide", sendDuration);
+      sendDuration();
     };
   }, [pathname]);
 

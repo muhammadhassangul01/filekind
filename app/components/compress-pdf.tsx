@@ -124,7 +124,7 @@ export default function CompressPdf({ seo, panelFaq, breadcrumbs }: CompressPdfP
               <div className="panel-heading">
                 <div>
                   <h2 id="compress-heading">Choose a PDF</h2>
-                  <p className="small-note">Up to {formatBytes(PDF_LIMITS.inputBytes)} and {PDF_LIMITS.pages} pages</p>
+                  <p className="small-note">Large files supported · up to {PDF_LIMITS.pages} pages</p>
                 </div>
               </div>
               <label className="dropzone" htmlFor="compress-pdf-file">

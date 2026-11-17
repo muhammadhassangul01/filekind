@@ -46,7 +46,7 @@ export const compressFaqs: Faq[] = [
   {
     question: "What are the size limits?",
     answer:
-      "Images up to 25 MB, 16,000 pixels per side, and 48 megapixels are supported. That ceiling still covers high-resolution photos such as 7,952 by 5,304 pixels.",
+      "There is no artificial byte-size limit. Images over 2,000,000 pixels on either side are rejected to protect browser canvases.",
   },
   {
     question: "Can I compress PNG images and keep transparency?",
@@ -132,7 +132,7 @@ export const imagesToPdfFaqs: Faq[] = [
   {
     question: "How large can my images be?",
     answer:
-      "Each image can be up to 25 MB, 16,000 pixels per side, and 48 megapixels. Files are processed locally, so the practical limit is also your device's memory.",
+      "There is no artificial byte-size limit. Files are processed locally, so the practical limit is your device's available memory.",
   },
 ];
 

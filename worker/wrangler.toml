@@ -5,6 +5,8 @@ workers_dev = true
 
 [vars]
 ALLOWED_ORIGINS = "https://filekind.tech,https://www.filekind.tech,https://filekind.muhammadhassangul01.workers.dev,https://filekind.pages.dev,http://localhost:3000"
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "1234"
 
 [triggers]
 crons = ["0 3 * * *"]

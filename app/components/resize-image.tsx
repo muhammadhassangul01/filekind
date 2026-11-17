@@ -223,7 +223,7 @@ export default function ResizeImage({ title, introCopy, initialWidth, initialHei
               <div className="panel-heading">
                 <div>
                   <h2 id="resize-heading">Choose an image</h2>
-                  <p className="small-note">JPEG, PNG, or static WebP, up to 25 MB</p>
+                  <p className="small-note">JPEG, PNG, or static WebP · up to 2,000,000 px per side</p>
                 </div>
               </div>
               {source && file ? (

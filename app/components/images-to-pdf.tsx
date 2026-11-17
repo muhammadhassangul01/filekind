@@ -5,7 +5,7 @@ import { SortableContext, sortableKeyboardCoordinates, useSortable, verticalList
 import { CSS } from "@dnd-kit/utilities";
 import { useEffect, useRef, useState } from "react";
 import ToolLayout from "./tool-layout";
-import { decodeImage, formatBytes, isAnimatedWebP, MAX_INPUT_BYTES, releaseImage, validateInput, type ImageInfo } from "./image-utils";
+import { decodeImage, formatBytes, isAnimatedWebP, releaseImage, validateInput, type ImageInfo } from "./image-utils";
 import { ToolFaq, imagesToPdfFaqs, imagesToPdfHowTo } from "./tool-faqs";
 import type { Faq } from "@/lib/content/types";
 import type { Crumb } from "@/lib/seo";
@@ -147,7 +147,7 @@ function SortableImageRow({ item, index, onRemove, disabled, activeId, overId }:
 export default function ImagesToPdf({ variant, seo, panelFaq }: ImagesToPdfProps) {
   const acceptTypes = variant?.accept ?? accepted;
   const acceptAttr = acceptTypes.join(",");
-  const inputLabel = variant?.inputLabel ?? "JPEG, PNG, static WebP, or HEIC, up to 25 MB each";
+  const inputLabel = variant?.inputLabel ?? "JPEG, PNG, static WebP, or HEIC · up to 2,000,000 px per side";
   const [items, setItems] = useState<SelectedImage[]>([]); const [settings, setSettings] = useState<Settings>(defaultSettings); const [result, setResult] = useState<Result | null>(null);
   const [busy, setBusy] = useState(false); const [activeId, setActiveId] = useState<string | null>(null); const [overId, setOverId] = useState<string | null>(null); const [status, setStatus] = useState(""); const [error, setError] = useState("");
   const itemsRef = useRef(items); const resultRef = useRef<Result | null>(null); const abortRef = useRef<AbortController | null>(null); const headingRef = useRef<HTMLHeadingElement | null>(null);
@@ -164,7 +164,6 @@ export default function ImagesToPdf({ variant, seo, panelFaq }: ImagesToPdfProps
     for (const file of files) {
       let candidate = file;
       if (isHeic(file) && acceptTypes.some((type) => type === "image/heic" || type === "image/heif")) {
-        if (file.size > MAX_INPUT_BYTES) { setError(`${file.name}: This file is larger than the 25 MB supported limit.`); continue; }
         setStatus("Converting HEIC photo...");
         try { candidate = await heicToJpeg(file); } catch (conversionError) { setError(`${file.name}: ${conversionError instanceof Error ? conversionError.message : "This HEIC file could not be converted."}`); continue; }
       }

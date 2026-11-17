@@ -138,7 +138,7 @@ export default function SplitPdf({ seo, panelFaq, breadcrumbs }: SplitPdfProps) 
           <div className="panel-heading">
             <div>
               <h2 id="split-heading" ref={headingRef} tabIndex={-1}>{pageCount ? `${pageCount} page${pageCount === 1 ? "" : "s"}` : "Choose a PDF"}</h2>
-              <p className="small-note">Up to {formatBytes(PDF_LIMITS.inputBytes)} and {PDF_LIMITS.pages} pages</p>
+              <p className="small-note">Large files supported · up to {PDF_LIMITS.pages} pages</p>
             </div>
           </div>
 

@@ -1,4 +1,5 @@
 import type { InternalLink } from "./types";
+import { extraTools } from "@/lib/extra-tools";
 
 export type SiteLink = InternalLink;
 
@@ -13,6 +14,7 @@ export const toolLinks: SiteLink[] = [
   { href: "/split-pdf", label: "Split PDF" },
   { href: "/compress-pdf", label: "Compress PDF" },
   { href: "/rotate-pdf", label: "Rotate PDF" },
+  ...extraTools.map((tool) => ({ href: `/${tool.path}`, label: tool.label })),
 ];
 
 export const converterLinks: SiteLink[] = [
@@ -146,7 +148,7 @@ export const contentPaths: string[] = [
   "/privacy",
 ];
 
-const imageToolHrefs = new Set(["/compress-image", "/resize-image", "/convert-image", "/images-to-pdf", "/pdf-to-images"]);
+const imageToolHrefs = new Set(["/compress-image", "/resize-image", "/convert-image", "/images-to-pdf", "/pdf-to-images", ...extraTools.map((tool) => `/${tool.path}`)]);
 const pdfEditHrefs = new Set(["/merge-pdf", "/split-pdf", "/compress-pdf", "/rotate-pdf"]);
 const pdfToolHrefs = new Set([...pdfEditHrefs, "/images-to-pdf", "/pdf-to-images"]);
 

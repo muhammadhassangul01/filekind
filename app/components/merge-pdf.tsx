@@ -173,7 +173,7 @@ export default function MergePdf({ seo, panelFaq, breadcrumbs }: MergePdfProps) 
               <div className="panel-heading">
                 <div>
                   <h2 id="merge-heading">{items.length ? `${items.length} PDF${items.length === 1 ? "" : "s"} in order` : "Choose PDFs"}</h2>
-                  <p className="small-note">Up to {PDF_LIMITS.files} files, {PDF_LIMITS.pages} pages combined, {formatBytes(PDF_LIMITS.inputBytes)} each</p>
+                  <p className="small-note">Large files supported · up to {PDF_LIMITS.files} files</p>
                 </div>
               </div>
               {items.length === 0 ? (

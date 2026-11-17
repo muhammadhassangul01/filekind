@@ -75,16 +75,16 @@ After a content change, run `pnpm exec tsc --noEmit`, `pnpm lint`, and `pnpm bui
 
 ## Analytics
 
-The static Pages app serves `/analytics` like any other page. The dashboard reads anonymous, aggregate reports from the separate Cloudflare Analytics Worker at `/data`; it is not an authenticated or private report. `/admin` remains available as a compatibility route. The dashboard reports page views, interactions, daily trends, top pages, and countries for today and the last 7, 30, or 90 days.
+The static Pages app serves `/analytics` like any other page. The dashboard signs in through the separate Cloudflare Analytics Worker, then reads reports from `/data`; `/admin` remains available as a compatibility route. The dashboard reports page views, anonymous unique visitors, cities and countries, time spent by page, and button/link interactions for the last 24 hours, 7, 30, 90 days, or all time.
 
 1. Create a D1 database and put its ID in `worker/wrangler.toml`.
 2. Run `pnpm worker:db:migrate:remote` from the repository root.
 3. Set the Worker `ALLOWED_ORIGINS` variable to the exact Pages origin and deploy with `pnpm worker:deploy`.
-4. The site defaults to the Filekind analytics Worker URL. If you use another Worker, set `NEXT_PUBLIC_ANALYTICS_ENDPOINT` to its `/analytics` URL before building Pages.
+4. The site defaults to the Filekind analytics Worker URL. If you use another Worker, set `NEXT_PUBLIC_ANALYTICS_ENDPOINT` to its `/analytics` URL before building Pages. Configure `ADMIN_USERNAME` and `ADMIN_PASSWORD` as Worker variables or secrets before deployment.
 
-Cloudflare Pages serves static files, so it cannot run a Next.js server-side analytics endpoint or provide Worker invocation logs for each page request. The browser beacon sends page-view and interaction event counts to the separately deployed Worker, which persists daily UTC aggregates in D1. The dashboard reflects those events; Cloudflare Worker observability can be used to inspect the Worker itself but is not the site analytics report.
+Cloudflare Pages serves static files, so it cannot run a Next.js server-side analytics endpoint or provide Worker invocation logs for each page request. The browser beacon sends anonymous visitor, page-view, time, and interaction events to the separately deployed Worker, which persists them in D1. Cloudflare geolocation adds city and country to page-view events; no file contents, filenames, or form values are collected. The dashboard reflects those events.
 
-The Worker groups page views by page and country and interactions by page and generic event type. It does not store raw IP addresses, filenames, file contents, query strings, fingerprints, or persistent visitor IDs. A scheduled Worker task removes aggregate rows older than 90 days. Counts are events, not unique people.
+The Worker stores anonymous visitor IDs with page views, time-on-page, and interaction events so it can calculate unique visitors and locations without raw IP addresses. It does not store filenames, file contents, or query strings. Event history is retained for the all-time report; expired admin sessions are removed on schedule.
 
 ## Browser limitations
 

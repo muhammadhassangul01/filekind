@@ -1,6 +1,5 @@
-export const MAX_INPUT_BYTES = 25_000_000;
-export const MAX_DIMENSION = 16_000;
-export const MAX_PIXELS = 48_000_000;
+export const MAX_DIMENSION = 2_000_000;
+export const MAX_PIXELS = MAX_DIMENSION * MAX_DIMENSION;
 
 export type ImageInfo = { width: number; height: number; url: string; image: HTMLImageElement };
 export type CompressionAttempt = { attempt: number; width: number; height: number; quality: number; bytes: number; durationMs: number };
@@ -18,7 +17,6 @@ export function formatDimensions(width: number, height: number): string {
 
 export function validateInput(file: File, types: string[], typeHint = "JPEG, PNG, or static WebP"): string | null {
   if (!types.includes(file.type)) return `Choose a supported ${typeHint} image file.`;
-  if (file.size > MAX_INPUT_BYTES) return "This file is larger than the 25 MB supported limit.";
   if (file.size === 0) return "That file is empty. Choose a different image.";
   return null;
 }

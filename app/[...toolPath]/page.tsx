@@ -11,6 +11,8 @@ import PdfToImages from "@/app/components/pdf-to-images";
 import ResizeImage from "@/app/components/resize-image";
 import RotatePdf from "@/app/components/rotate-pdf";
 import SplitPdf from "@/app/components/split-pdf";
+import ImageUtility from "@/app/components/image-utility";
+import { extraTools, getExtraTool } from "@/lib/extra-tools";
 import { getUseCaseByPath, useCases, type UseCase } from "@/lib/use-cases";
 import { getNicheToolByPath, nicheTools, type NicheTool } from "@/lib/niche-tools";
 import { absoluteUrl, faqSchema, pageMetadata } from "@/lib/seo";
@@ -19,6 +21,7 @@ export const dynamic = "force-static";
 
 export function generateStaticParams() {
   return [
+    ...extraTools.map((tool) => ({ toolPath: tool.path.split("/") })),
     ...nicheTools.map((tool) => ({ toolPath: tool.path })),
     ...useCases.map((useCase) => ({ toolPath: useCase.path })),
   ];
@@ -27,10 +30,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ toolPath: string[] }> }): Promise<Metadata> {
   const path = (await params).toolPath;
   const tool = getNicheToolByPath(path);
+  const extraTool = getExtraTool(path.join("/"));
   const useCase = getUseCaseByPath(path);
-  const page = tool ?? useCase;
+  const page = tool ?? useCase ?? extraTool;
   if (!page) return {};
-  return pageMetadata({ title: page.title, description: page.description, path: `/${page.path.join("/")}`, keywords: page.keywords });
+  const pagePath = "path" in page && Array.isArray(page.path) ? `/${page.path.join("/")}` : `/${page.path}`;
+  return pageMetadata({ title: page.title, description: page.description, path: pagePath, keywords: page.keywords });
 }
 
 function CatalogContent({ tool }: { tool: NicheTool }) {
@@ -65,7 +70,7 @@ function ToolBody({ tool }: { tool: NicheTool }) {
     case "compress": return <ImageCompressor title={tool.title} introCopy={tool.description} initialTargetKB={tool.target.maxKB} extraContent={<CatalogContent tool={tool} />} />;
     case "resize": return <ResizeImage title={tool.title} introCopy={tool.description} initialWidth={tool.preset.width} initialHeight={tool.preset.height} initialFormat={tool.preset.format === "png" ? "png" : "jpg"} initialQuality={tool.preset.quality} extraContent={<CatalogContent tool={tool} />} />;
     case "convert": return <ConvertTool tool={tool} />;
-    case "images-to-pdf": return <ImagesToPdf variant={{ title: tool.title, intro: tool.description, accept: tool.accept ?? ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"], inputLabel: "Supported images, up to 25 MB each", faqs: tool.faqs, breadcrumbs: [{ name: "Home", href: "/" }, { name: tool.title }] }} seo={<CatalogContent tool={tool} />} />;
+    case "images-to-pdf": return <ImagesToPdf variant={{ title: tool.title, intro: tool.description, accept: tool.accept ?? ["image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"], inputLabel: "Supported images · up to 2,000,000 px per side", faqs: tool.faqs, breadcrumbs: [{ name: "Home", href: "/" }, { name: tool.title }] }} seo={<CatalogContent tool={tool} />} />;
     case "pdf-to-images": return <PdfToImages variant={{ title: tool.title, intro: tool.description, format: tool.format === "png" ? "png" : "jpg", formatLabel: tool.format === "png" ? "PNG" : "JPG", faqs: tool.faqs, breadcrumbs: [{ name: "Home", href: "/" }, { name: tool.title }] }} seo={<CatalogContent tool={tool} />} />;
     case "merge-pdf": return <MergePdf seo={<CatalogContent tool={tool} />} breadcrumbs={[{ name: "Home", href: "/" }, { name: tool.title }]} />;
     case "split-pdf": return <SplitPdf seo={<CatalogContent tool={tool} />} breadcrumbs={[{ name: "Home", href: "/" }, { name: tool.title }]} />;
@@ -128,6 +133,11 @@ function UseCaseBody({ useCase }: { useCase: UseCase }) {
         extraContent={extraContent}
       />;
   }
+
+}
+
+function ExtraToolBody({ tool }: { tool: typeof extraTools[number] }) {
+  return <ImageUtility mode={tool.mode} title={tool.title} introCopy={tool.description} />;
 }
 
 export default async function CatalogToolPage({ params }: { params: Promise<{ toolPath: string[] }> }) {
@@ -137,6 +147,9 @@ export default async function CatalogToolPage({ params }: { params: Promise<{ to
     const schema = schemaFor(tool);
     return <><JsonLd data={schema.webApplication} /><JsonLd data={schema.faqPage} /><ToolBody tool={tool} /></>;
   }
+
+  const extraTool = getExtraTool(path.join("/"));
+  if (extraTool) return <ExtraToolBody tool={extraTool} />;
 
   const useCase = getUseCaseByPath(path);
   if (!useCase) notFound();

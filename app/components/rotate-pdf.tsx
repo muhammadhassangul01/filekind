@@ -108,7 +108,7 @@ export default function RotatePdf({ seo, panelFaq, breadcrumbs }: RotatePdfProps
           <div className="panel-heading">
             <div>
               <h2 id="rotate-heading" ref={headingRef} tabIndex={-1}>{previews.length ? `${previews.length} page${previews.length === 1 ? "" : "s"}` : "Choose a PDF"}</h2>
-              <p className="small-note">Up to {formatBytes(PDF_LIMITS.inputBytes)} and {PDF_LIMITS.pages} pages</p>
+              <p className="small-note">Large files supported · up to {PDF_LIMITS.pages} pages</p>
             </div>
           </div>
 
